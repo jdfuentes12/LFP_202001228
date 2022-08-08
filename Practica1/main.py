@@ -1,7 +1,15 @@
+from glob import escape
+from msilib.schema import ComboBox
+from pyclbr import Class
+from re import L
+from select import select
 from tkinter import *
 from tkinter import filedialog
+from tkinter import ttk
+from tkinter import font
 
-
+#C:\Users\jose2\OneDrive\Escritorio\archivo.lfp
+#ruta del archivo  prueba :v
 
 class Menu():
 
@@ -40,7 +48,7 @@ class Menu():
         botonGestionar = Button(self.frame,bg="#447cb6",font=("Consolas",12),text="Gestionar Cursos",command=self.gestionar)
         botonGestionar.place(x=215,y=185)
 
-        botonConteo = Button(self.frame,bg="#447cb6", font=("Consolas",12),text="Conteo de Créditos")
+        botonConteo = Button(self.frame,bg="#447cb6", font=("Consolas",12),text="Conteo de Créditos",command=self.conteo)
         botonConteo.place(x=208,y=225)
 
         botonSalir = Button(self.frame,bg="#447cb6",font=("Consolas",12), text="Salir",command=self.menu.destroy)
@@ -55,6 +63,10 @@ class Menu():
     def gestionar(self):
         self.menu.destroy()
         GestionarCurso()
+
+    def conteo(self):
+        self.menu.destroy()
+        ConteoCreditos()
 
 class CargarArchivo():
     def __init__(self):
@@ -75,19 +87,33 @@ class CargarArchivo():
         textoR.place(x=20,y=45)
         textoR.config(font=("Consolas",13))
 
-        ruta = Text(self.frame, height = 1, width = 50)
-        ruta.place(x=100,y=50)
+        self.ruta = Text(self.frame, height = 1, width = 50)
+        self.ruta.place(x=100,y=50)
 
-        seleccionar = Button(self.frame,bg="#42d35c",text="Seleccionar",font=("Consolas",12))
+        seleccionar = Button(self.frame,bg="#42d35c",text="Seleccionar",font=("Consolas",12),command=self.leerTexto)
         seleccionar.pack
         seleccionar.place(x=150,y=100)
 
-        regresar = Button(self.frame,bg="#42d35c",text="Regresar",font=("Consolas",12),command=self.regresar)
+        regresar = Button(self.frame,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
         regresar.pack
         regresar.place(x=300,y=100)
         
 
         self.frame.mainloop()
+
+    def leerTexto(self):
+        resultado = self.ruta.get("1.0","end").replace("\n","")
+        
+        '''fichero = open (resultado,'rt',encoding='utf-8')
+        print((fichero.readlines()))
+        fichero.close()'''
+        
+        #otra forma de abrir archivos
+        file  = open(resultado,'r')
+        print(file.read())
+        file.close
+        
+        
 
     def regresar(self):
         self.cargar.destroy()
@@ -109,23 +135,23 @@ class GestionarCurso():
         self.frame.pack(padx=25,pady=25)
 
         
-        listar = Button(self.frame,bg="#42d35c",text="Listar Cursos",font=("Consolas",12))
+        listar = Button(self.frame,bg="#447cb6",text="Listar Cursos",font=("Consolas",12))
         listar.pack
         listar.place(x=150,y=50)
 
-        agregar = Button(self.frame,bg="#42d35c",text="Agregar Cursos",font=("Consolas",12))
+        agregar = Button(self.frame,bg="#447cb6",text="Agregar Cursos",font=("Consolas",12))
         agregar.pack
         agregar.place(x=150,y=100)
 
-        editar = Button(self.frame,bg="#42d35c",text="Editar Cursos",font=("Consolas",12))
+        editar = Button(self.frame,bg="#447cb6",text="Editar Cursos",font=("Consolas",12))
         editar.pack
         editar.place(x=150,y=150)
         
-        eliminar = Button(self.frame,bg="#42d35c",text="Eliminar Cursos",font=("Consolas",12))
+        eliminar = Button(self.frame,bg="#447cb6",text="Eliminar Cursos",font=("Consolas",12))
         eliminar.pack
         eliminar.place(x=150,y=200)
 
-        regresar = Button(self.frame,bg="#42d35c",text="Regresar",font=("Consolas",12),command=self.regresar)
+        regresar = Button(self.frame,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
         regresar.pack
         regresar.place(x=150,y=250)
 
@@ -135,41 +161,106 @@ class GestionarCurso():
         self.gestionar.destroy()
         Menu()
 
+#todo el codigo de las ventanas de gestionar cursos 
+#--------------------------------------INICIO DE GESTIONAR CURSOS--------------------------------------------------
+class ListaCursos():
+    print("lista")
+    def __init__(self):
+        self.lista = Tk()
+        self.lista.title("Gestionar Cursos")
+        self.lista.resizable(0,0)
+        self.lista.geometry("450x400")
+        self.lista.configure(bg="#18b9e4")
+        self.container()
+
+    def conteiner(self):
+        self.frame = Frame(height=400,width=500)
+        self.frame.config(bg="#00e4ce")
+        self.frame.pack(padx=25,pady=25)
+
+
+class AgregarCurso():
+    print("agregar")
+
+class EditarCurso():
+    print("editar")
+
+class EliminarCuro():
+    print("elimnar")
+
+#--------------------------------------Fin de Gestionar Cursos-------------------------------------------
+
 class ConteoCreditos():
 
     def __init__(self):
         self.conteo = Tk()
-        self.conteo.title("Seleccionar Archivo")
+        self.conteo.title("Conteo de Creditos")
         self.conteo.resizable(0,0)
-        self.conteo.geometry("650x300")
+        self.conteo.geometry("650x500")
         self.conteo.configure(bg="#18b9e4")
         self.container()
     
     def container(self):
-        self.frame = Frame(height=400,width=600)
+        self.frame = Frame(height=550,width=650)
         self.frame.config(bg="#00e4ce")
         self.frame.pack(padx=25,pady=25)
 
-        textoR = Label(self.frame,bg="#42d35c" , text="Ruta:")
-        textoR.pack
-        textoR.place(x=20,y=45)
-        textoR.config(font=("Consolas",13))
 
-        ruta = Text(self.frame, height = 1, width = 50)
-        ruta.place(x=100,y=50)
+        aprobados = Label(self.frame,bg="#42d35c",text="Créditos Aprobados:",font=("Consolas",13))
+        aprobados.pack
+        aprobados.place(x=20,y=20)
 
-        seleccionar = Button(self.frame,bg="#42d35c",text="Seleccionar",font=("Consolas",12))
-        seleccionar.pack
-        seleccionar.place(x=150,y=100)
 
-        regresar = Button(self.frame,bg="#42d35c",text="Regresar",font=("Consolas",12),command=self.regresar)
-        regresar.pack
-        regresar.place(x=300,y=100)
+        cursado = Label(self.frame,bg="#42d35c" , text="Créditos Cursando:",font=("Consolas",13))
+        cursado.pack
+        cursado.place(x=20,y=70)
         
+        pendientes = Label(self.frame,bg="#42d35c",text="Créditos Pendientes", font=("Consolas",13))
+        pendientes.pack
+        pendientes.place(x=20,y=120)
 
+        obligatorios = Label(self.frame,bg="#42d35c",text="Créditos Obligatorios hasta semestre N:",font=("Consolas",13))
+        obligatorios.pack
+        obligatorios.place(x=20,y=170)
+
+        obligariosCreditos = Text(self.frame, height = 1, width = 10)
+        obligariosCreditos.place(x=400,y=170)
+        
+        osemestre = Label(self.frame,bg="#42d35c",text="Semestre",font=("Consolas",13))
+        osemestre.pack
+        osemestre.place(x=50,y=220)
+
+        csemestre=Label(self.frame,bg="#42d35c",text="Créditos del semestre:",font=("Consolas",13))
+        csemestre.pack
+        csemestre.place(x=20,y=270)
+
+        cretidosSemestre = Text(self.frame,height=1,width=10)
+        cretidosSemestre.place(x=250,y=270)
+
+        csemestre = Label(self.frame,bg="#42d35c",text="Semestre",font=("Consolas",13))
+        csemestre.pack
+        csemestre.place(x=50,y=320)
+
+        regresar = Button(self.frame,text="Regresa",bg="#447cb6",font=("Consolas",13),command=self.regresar)
+        regresar.pack
+        regresar.place(x=480,y=370)
+
+        
+        combo = ttk.Combobox(values=["1","2","3","4","5","6","7","8","9","10","11","12"])
+        #codigo para realizar la accion despues de seleccionar una de las opcciones
+        #combo.bind("<<ComboboxSelected>>", selection_changed)
+        combo.place(x=200,y=250)
+        
+        combo1 = ttk.Combobox(values=["1","2","3","4","5","6","7","8","9","10","11","12"])
+        #codigo para realizar la accion despues de seleccionar una de las opcciones
+        #combo.bind("<<ComboboxSelected>>", selection_changed)
+        combo1.place(x=200,y=350)
+
+        
         self.frame.mainloop()
 
-
-
+    def regresar(self):
+        self.conteo.destroy()
+        Menu()
 
 a = Menu()
