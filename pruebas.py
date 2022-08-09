@@ -1,119 +1,45 @@
-from msilib.schema import Class
-from tkinter import *
+import tkinter as tk
+from tkinter import ttk
 
 
-class Menu():
-
+class App(tk.Tk):
     def __init__(self):
-        #print("estoy aca")
-        self.ventana = Tk()
-        self.ventana.title("Menu")
-        self.ventana.resizable(0,0)
-        self.ventana.geometry("650x350")
-        self.ventana.configure(bg="#1c1672")
-        #print("estoy aca-")
+        super().__init__()
 
-        '''curso = Label(self.ventana, text="Nombre del curso: Lab. Lenguajer Formales de Programación")
-        curso.pack
-        curso.place(x=20,y=10)
-        curso.config(font=("Arial Rounded MT Bold",13))
-        
-        self.frame = Frame(height=500,width=350)
-        nombre = Label(self.ventana, text="Nombre del estudiante: José Daniel Fuentes Orozco")
-        nombre.pack
-        nombre.place(x=20,y=40)
-        nombre.config(font=("Arial Rounded MT Bold",13))
+        self.title('Treeview demo')
+        self.geometry('620x200')
 
-        carne = Label(self.ventana, text="Carné del estudiante: 202001228",font=("Arial Rounded MT Bold",13))
-        carne.pack
-        carne.place(x=20,y=70)
-        carne.config(font=("Arial Rounded MT Bold",13))
+        self.tree = self.create_tree_widget()
 
-        botonCarga =  Button(self.ventana,text="Cargar Archivo")
-        botonCarga.place(x=280,y=150)
+    def create_tree_widget(self):
+        columns = ('first_name', 'last_name', 'email')
+        tree = ttk.Treeview(self, columns=columns, show='headings')
 
-        botonGestionar = Button(self.ventana,text="Gestionar Cursos")
-        botonGestionar.place(x=275,y=190)
+        # define headings
+        tree.heading('first_name', text='First Name')
+        tree.heading('last_name', text='Last Name')
+        tree.heading('email', text='Email')
 
-        botonConteo = Button(self.ventana, text="Conteo de Créditos")
-        botonConteo.place(x=270,y=230)
+        tree.grid(row=0, column=0, sticky=tk.NSEW)
 
-        botonSalir = Button(self.ventana, text="Salir")
-        botonSalir.place(x=310,y=270)'''
+        # adding an item
+        tree.insert('', tk.END, values=('John', 'Doe', 'john.doe@email.com'))
 
-        self.botones()
+        # insert a the end
+        tree.insert('', tk.END, values=('Jane', 'Miller', 'jane.miller@email.com'))
 
-        
-        self.ventana.mainloop()
+        # insert at the beginning
+        tree.insert('', 0, values=('Alice', 'Garcia', 'alice.garcia@email.com'))
+
+        tree.bind('<<TreeviewSelect>>', self.item_selected)
+
+        return tree
+
+    def item_selected(self, event):
+        for selected_item in self.tree.selection():
+            self.tree.delete(selected_item)
 
 
-
-#FALTA EVALUAR PARA QUE LLAME AL FRAME
-#-------------------------------------------------------------------------
-    def botones(self):
-        self.frame = Frame
-
-        curso = Label(self.frame, text="Nombre del curso: Lab. Lenguajer Formales de Programación")
-        curso.pack
-        curso.place(x=20,y=10)
-        curso.config(font=("Arial Rounded MT Bold",13))
-
-        nombre = Label(self.frame, text="Nombre del estudiante: José Daniel Fuentes Orozco")
-        nombre.pack
-        nombre.place(x=20,y=40)
-        nombre.config(font=("Arial Rounded MT Bold",13))
-
-        carne = Label(self.frame, text="Carné del estudiante: 202001228",font=("Arial Rounded MT Bold",13))
-        carne.pack
-        carne.place(x=20,y=70)
-        carne.config(font=("Arial Rounded MT Bold",13))
-
-
-        botonCarga =  Button(self.frame,text="Cargar Archivo")
-        botonCarga.place(x=280,y=150)
-
-        botonGestionar = Button(self.frame,text="Gestionar Cursos")
-        botonGestionar.place(x=275,y=190)
-
-        botonConteo = Button(self.frame, text="Conteo de Créditos")
-        botonConteo.place(x=270,y=230)
-
-        botonSalir = Button(self.frame, text="Salir")
-        botonSalir.place(x=310,y=270)
-
-        self.ventana.mainloop()
-
-'''    def container(self):
-        self.frame = Frame(height=550,width=350)
-        self.frame.config("#ff19ff")
-        self.frame.pack(padx=25,pady=25)
-
-
-
-        curso = Label(self.frame, text="Nombre del curso: Lab. Lenguajer Formales de Programación")
-        curso.pack
-        curso.place(x=20,y=10)
-        curso.config(font=("Arial Rounded MT Bold",13))
-
-        nombre = Label(self.frame, text="Nombre del estudiante: José Daniel Fuentes Orozco")
-        nombre.pack
-        nombre.place(x=20,y=40)
-        nombre.config(font=("Arial Rounded MT Bold",13))
-
-        carne = Label(self.frame, text="Carné del estudiante: 202001228",font=("Arial Rounded MT Bold",13)).place(x=20,y=70)
-        carne.pack
-        carne.place(x=20,y=70)
-        carne.config(font=("Arial Rounded MT Bold",13))
-        self.frame.mainloop()
-'''
-
-class GestionarCurso():
-    def __init__(self):
-        self.ventana = Tk()
-
-
-
-
-
-#llama a la funcion de menú
-Menu()
+if __name__ == '__main__':
+    app = App()
+    app.mainloop()

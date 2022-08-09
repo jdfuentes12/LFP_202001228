@@ -1,3 +1,5 @@
+from cgitb import text
+import fractions
 from glob import escape
 from msilib.schema import ComboBox
 from pyclbr import Class
@@ -5,8 +7,11 @@ from re import L
 from select import select
 from tkinter import *
 from tkinter import filedialog
-from tkinter import ttk
+from tkinter import ttk 
 from tkinter import font
+from Cursos import Cursos
+from tkinter.messagebox import showinfo
+
 
 #C:\Users\jose2\OneDrive\Escritorio\archivo.lfp
 #ruta del archivo  prueba :v
@@ -102,18 +107,24 @@ class CargarArchivo():
         self.frame.mainloop()
 
     def leerTexto(self):
+        #obtner el resultado del  TEXT
         resultado = self.ruta.get("1.0","end").replace("\n","")
         
-        '''fichero = open (resultado,'rt',encoding='utf-8')
-        print((fichero.readlines()))
-        fichero.close()'''
+        #LEER ARCHIVOS .LFP
         
-        #otra forma de abrir archivos
-        file  = open(resultado,'r')
-        print(file.read())
-        file.close
+        archivo = open(resultado,'r',encoding='utf-8')
+        linea = archivo.readline()
+        print("estoy en el archivo \n")
         
+        while linea != '':
+            linea= archivo.readline()
+            temporal = linea.split('\n')
+            #print(temporal)
+            comas = linea.split(',')
+            print(comas)
+            print(comas[0])
         
+        archivo.close
 
     def regresar(self):
         self.cargar.destroy()
@@ -135,7 +146,7 @@ class GestionarCurso():
         self.frame.pack(padx=25,pady=25)
 
         
-        listar = Button(self.frame,bg="#447cb6",text="Listar Cursos",font=("Consolas",12))
+        listar = Button(self.frame,bg="#447cb6",text="Listar Cursos",font=("Consolas",12),command=self.lista)
         listar.pack
         listar.place(x=150,y=50)
 
@@ -157,6 +168,10 @@ class GestionarCurso():
 
         self.frame.mainloop()
 
+    def lista(self):
+        self.gestionar.destroy()
+        ListaCursos()
+    
     def regresar(self):
         self.gestionar.destroy()
         Menu()
@@ -167,17 +182,47 @@ class ListaCursos():
     print("lista")
     def __init__(self):
         self.lista = Tk()
-        self.lista.title("Gestionar Cursos")
-        self.lista.resizable(0,0)
-        self.lista.geometry("450x400")
+        self.lista.title("Lista de Cursos")
+        self.lista.resizable(1,1)
+        self.lista.geometry("750x400")
         self.lista.configure(bg="#18b9e4")
-        self.container()
-
-    def conteiner(self):
-        self.frame = Frame(height=400,width=500)
+        self.contenido()
+        
+        
+    def contenido(self):
+        self.frame = Frame(height=1000,width=1000)
         self.frame.config(bg="#00e4ce")
         self.frame.pack(padx=25,pady=25)
+        
+        # define columns  
+        columns = ('codigo','nombre','pre_requisitos','opcional','semestre','creditos','estado')
 
+        tabla = ttk.Treeview(self.frame, columns=columns, show='headings')
+        tabla.place(x=100,y=50)
+        
+        tabla.column('codigo',width=80,anchor=CENTER)
+        tabla.column('nombre',width=120,anchor=CENTER)
+        tabla.column('pre_requisitos',width=100,anchor=CENTER)
+        tabla.column('opcional',width=80,anchor=CENTER)
+        tabla.column('semestre',width=80,anchor=CENTER)
+        tabla.column('creditos',width=80,anchor=CENTER)
+        tabla.column('estado',width=80,anchor=CENTER)
+        
+
+        # define headings
+        tabla.heading('codigo',text='Código')
+        tabla.heading('nombre', text='Nombre')
+        tabla.heading('pre_requisitos', text='Pre requisitos')
+        tabla.heading('opcional', text='Opcional')
+        tabla.heading('semestre', text='Semestre')
+        tabla.heading('creditos', text='Créditos')
+        tabla.heading('estado', text='Estado')
+        tabla.pack
+
+        tabla.grid(row=0, column=0, sticky='nsew')
+
+        # add a scrollbar
+        self.frame.mainloop()
 
 class AgregarCurso():
     print("agregar")
