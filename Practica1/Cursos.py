@@ -1,6 +1,3 @@
-import re
-
-
 class Cursos():
     
     def __init__(self,codigo,nombre,requisitos,semestre,opcional,creditos,estado):

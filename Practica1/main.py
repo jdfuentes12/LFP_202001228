@@ -1,4 +1,8 @@
+from cProfile import label
+from cgi import print_arguments
 from cgitb import text
+from dataclasses import dataclass
+from distutils.sysconfig import customize_compiler
 import fractions
 from glob import escape
 from msilib.schema import ComboBox
@@ -9,8 +13,11 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk 
 from tkinter import font
+from traceback import print_tb
 from Cursos import Cursos
-from tkinter.messagebox import showinfo
+from tkinter import messagebox
+#from Analizador import Analizador
+
 
 
 #C:\Users\jose2\OneDrive\Escritorio\archivo.lfp
@@ -73,7 +80,7 @@ class Menu():
         self.menu.destroy()
         ConteoCreditos()
 
-class CargarArchivo():
+class CargarArchivo():  
     def __init__(self):
         self.cargar = Tk()
         self.cargar.title("Seleccionar Archivo")
@@ -110,22 +117,35 @@ class CargarArchivo():
         #obtner el resultado del  TEXT
         resultado = self.ruta.get("1.0","end").replace("\n","")
         
-        #LEER ARCHIVOS .LFP
+        cursos = self.Analizador(resultado)
         
-        archivo = open(resultado,'r',encoding='utf-8')
-        linea = archivo.readline()
-        print("estoy en el archivo \n")
+        for curso in cursos:
+            print(curso.getCodigo()," ",curso.getNombre())
         
-        while linea != '':
-            linea= archivo.readline()
-            temporal = linea.split('\n')
-            #print(temporal)
-            comas = linea.split(',')
-            print(comas)
-            print(comas[0])
+        messagebox.showinfo("Informacion", "Archivo Cargado con Exito")
+        self.ruta.delete("1.0","end")
         
-        archivo.close
 
+    def Analizador(self, ruta):
+        
+        try:
+            objeto = open(ruta,'r+',encoding='utf-8')
+            lineas = objeto.readlines()
+            objeto.close()
+            cursos = []
+            
+            for linea in lineas:
+                data = linea.split(',')
+                print(data)
+                curso = Cursos(data[0],data[1],data[2],data[3],data[4],data[5],data[6].rsplit('\n'))
+                cursos.append(curso)
+            return cursos
+        
+        except:
+            messagebox.showerror("Error", "El archivo ingresado no es valido \nIntente de nuevo  :)")
+            self.ruta.delete("1.0","end")
+    
+    
     def regresar(self):
         self.cargar.destroy()
         Menu()
@@ -150,7 +170,7 @@ class GestionarCurso():
         listar.pack
         listar.place(x=150,y=50)
 
-        agregar = Button(self.frame,bg="#447cb6",text="Agregar Cursos",font=("Consolas",12))
+        agregar = Button(self.frame,bg="#447cb6",text="Agregar Cursos",font=("Consolas",12),command=self.agregar)
         agregar.pack
         agregar.place(x=150,y=100)
 
@@ -158,7 +178,7 @@ class GestionarCurso():
         editar.pack
         editar.place(x=150,y=150)
         
-        eliminar = Button(self.frame,bg="#447cb6",text="Eliminar Cursos",font=("Consolas",12))
+        eliminar = Button(self.frame,bg="#447cb6",text="Eliminar Cursos",font=("Consolas",12),command=self.eliminar)
         eliminar.pack
         eliminar.place(x=150,y=200)
 
@@ -172,14 +192,21 @@ class GestionarCurso():
         self.gestionar.destroy()
         ListaCursos()
     
+    def agregar(Self):
+        Self.gestionar.destroy()
+        AgregarCurso()
+        
+    def eliminar(self):
+        self.gestionar.destroy()
+        EliminarCuro()
+    
     def regresar(self):
         self.gestionar.destroy()
         Menu()
 
 #todo el codigo de las ventanas de gestionar cursos 
-#--------------------------------------INICIO DE GESTIONAR CURSOS--------------------------------------------------
+#--------------------------------------INICIO DE GESTION DE CURSOS--------------------------------------------------
 class ListaCursos():
-    print("lista")
     def __init__(self):
         self.lista = Tk()
         self.lista.title("Lista de Cursos")
@@ -188,7 +215,6 @@ class ListaCursos():
         self.lista.configure(bg="#18b9e4")
         self.contenido()
         
-        
     def contenido(self):
         self.frame = Frame(height=1000,width=1000)
         self.frame.config(bg="#00e4ce")
@@ -196,7 +222,7 @@ class ListaCursos():
         
         # define columns  
         columns = ('codigo','nombre','pre_requisitos','opcional','semestre','creditos','estado')
-
+        
         tabla = ttk.Treeview(self.frame, columns=columns, show='headings')
         tabla.place(x=100,y=50)
         
@@ -208,7 +234,6 @@ class ListaCursos():
         tabla.column('creditos',width=80,anchor=CENTER)
         tabla.column('estado',width=80,anchor=CENTER)
         
-
         # define headings
         tabla.heading('codigo',text='Código')
         tabla.heading('nombre', text='Nombre')
@@ -217,22 +242,147 @@ class ListaCursos():
         tabla.heading('semestre', text='Semestre')
         tabla.heading('creditos', text='Créditos')
         tabla.heading('estado', text='Estado')
-        tabla.pack
-
+        
         tabla.grid(row=0, column=0, sticky='nsew')
-
-        # add a scrollbar
+        tabla.pack
+        
+        regresar = Button(self.lista,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
+        regresar.pack 
+        regresar.place(x=300,y=300)
+        
+        
+        
         self.frame.mainloop()
+    
+    def regresar(self):
+        self.lista.destroy()
+        GestionarCurso()
 
 class AgregarCurso():
-    print("agregar")
+    def __init__(self):
+        print("agregar curso")
+        self.agregarV = Tk()
+        self.agregarV.title("Agregar Curso")
+        self.agregarV.resizable(0,0)
+        self.agregarV.geometry("430x500")
+        self.agregarV.configure(bg="#18b9e4")
+        self.container()
+    
+    def container(self):
+    
+        self.frame = Frame(height=500,width=600)
+        self.frame.config(bg="#00e4ce")
+        self.frame.pack(padx=25,pady=25)
+        
+        c = Label(self.frame,bg="#42d35c",text="Código:",font=("Consolas",13))
+        c.pack
+        c.place(x=30,y=30)
+        
+        self.codigo = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.codigo.pack
+        self.codigo.place(x=180,y=30)
+        
+        n = Label(self.frame,bg="#42d35c",text="Nombre:",font=("Consolas",13))
+        n.pack
+        n.place(x=30,y=80)
+        
+        self.nombre = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.nombre.pack
+        self.nombre.place(x=180,y=80)
+        
+        p = Label(self.frame,bg="#42d35c",text="Pre Requisito:",font=("Consolas",13))
+        p.pack
+        p.place(x=30,y=130)
+        
+        self.requisito = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.requisito.pack
+        self.requisito.place(x=180,y=130)
+        
+        s = Label(self.frame,bg="#42d35c",text="Semestre:",font=("Consolas",13))
+        s.pack
+        s.place(x=30,y=180)
+        
+        self.semestre = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.semestre.pack
+        self.semestre.place(x=180,y=180)
+        
+        o = Label(self.frame,bg="#42d35c",text="Opcional:",font=("Consolas",13))
+        o.pack
+        o.place(x=30,y=230)
+        
+        self.opcional = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.opcional.pack
+        self.opcional.place(x=180,y=230)
+        
+        cr = Label(self.frame,bg="#42d35c",text="Créditos:",font=("Consolas",13))
+        cr.pack
+        cr.place(x=30,y=280)
+        
+        self.creditos = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.creditos.pack
+        self.creditos.place(x=180,y=280)
+        
+        e = Label(self.frame,bg="#42d35c",text="Estado:",font=("Consolas",13))
+        e.pack
+        e.place(x=30,y=330)
+        
+        self.estado = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.estado.pack
+        self.estado.place(x=180,y=330)
+        
+        agregar = Button(self.frame,bg="#447cb6",text="Agregar",font=("Consolas",12))
+        agregar.pack
+        agregar.place(x=50,y=380)
+        
+        regresar = Button(self.frame,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
+        regresar.pack
+        regresar.place(x=200,y=380)
+        
+        self.frame.mainloop()
+    
+    def regresar(self):
+        self.agregarV.destroy()
+        GestionarCurso()
 
 class EditarCurso():
     print("editar")
 
 class EliminarCuro():
-    print("elimnar")
+    def __init__(self):
+        self.eliminar = Tk()
+        self.eliminar.title("Eliminar Curso")
+        self.eliminar.resizable(0,0)
+        self.eliminar.geometry("650x300")
+        self.eliminar.configure(bg="#18b9e4")
+        self.container()
 
+    def container(self):
+        self.frame = Frame(height=400,width=600)
+        self.frame.config(bg="#00e4ce")
+        self.frame.pack(padx=25,pady=25)
+
+        textoR = Label(self.frame,bg="#42d35c" , text="Código de Curso:")
+        textoR.pack
+        textoR.place(x=20,y=45)
+        textoR.config(font=("Consolas",13))
+
+        self.ruta = Text(self.frame, height = 1, width = 25)
+        self.ruta.place(x=200,y=50)
+
+        eliminar = Button(self.frame,bg="#42d35c",text="Seleccionar",font=("Consolas",12))
+        eliminar.pack
+        eliminar.place(x=150,y=100)
+
+        regresar = Button(self.frame,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
+        regresar.pack
+        regresar.place(x=300,y=100)
+        
+
+        self.frame.mainloop()
+        
+    def regresar(self):
+        self.eliminar.destroy()
+        GestionarCurso()
 #--------------------------------------Fin de Gestionar Cursos-------------------------------------------
 
 class ConteoCreditos():
