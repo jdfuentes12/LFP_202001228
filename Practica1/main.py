@@ -1,28 +1,20 @@
-from cProfile import label
-from cgi import print_arguments
-from cgitb import text
-from dataclasses import dataclass
-from distutils.sysconfig import customize_compiler
-import fractions
-from glob import escape
-from msilib.schema import ComboBox
-from pyclbr import Class
-from re import L
 from select import select
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk 
+import tkinter as tk
 from tkinter import font
 from traceback import print_tb
 from Cursos import Cursos
 from tkinter import messagebox
-#from Analizador import Analizador
-
-
+from Analizador import Analizador
 
 #C:\Users\jose2\OneDrive\Escritorio\archivo.lfp
 #ruta del archivo  prueba :v
 
+global cursos
+cursos = []
+global contador
 class Menu():
 
     def __init__(self):
@@ -122,33 +114,40 @@ class CargarArchivo():
         for curso in cursos:
             print(curso.getCodigo()," ",curso.getNombre())
         
-        messagebox.showinfo("Informacion", "Archivo Cargado con Exito")
-        self.ruta.delete("1.0","end")
-        
-
     def Analizador(self, ruta):
         
         try:
             objeto = open(ruta,'r+',encoding='utf-8')
             lineas = objeto.readlines()
             objeto.close()
-            cursos = []
+            
             
             for linea in lineas:
                 data = linea.split(',')
                 print(data)
                 curso = Cursos(data[0],data[1],data[2],data[3],data[4],data[5],data[6].rsplit('\n'))
                 cursos.append(curso)
+                
             return cursos
         
         except:
             messagebox.showerror("Error", "El archivo ingresado no es valido \nIntente de nuevo  :)")
             self.ruta.delete("1.0","end")
-    
-    
+
     def regresar(self):
         self.cargar.destroy()
         Menu()
+
+    global cursos
+    cursos = []
+    
+    print("esta en el modulo analizador")
+    def AgregarCurso(codigo,nombre,requisito,semestre,opcional,creditos,estado):
+        
+        curso = Cursos(codigo,nombre,requisito,semestre,opcional,creditos,estado)
+        cursos.append(curso)
+        messagebox.showinfo("Informacion", "Archivo Cargado con Exito")        
+        return cursos
 
 class GestionarCurso():
 
@@ -250,6 +249,9 @@ class ListaCursos():
         regresar.pack 
         regresar.place(x=300,y=300)
         
+        #tabla.insert("",END,values=("100","prueba","0","2","0","5","0"))
+        for i in cursos:
+            tabla.insert("",END,values=(cursos.getCodigo(),cursos.getNombre,cursos.getRequisito(),cursos.getSemestre(),cursos.getOpcional(),cursos.getCreditos(),cursos.getEStado()))
         
         
         self.frame.mainloop()
@@ -330,7 +332,7 @@ class AgregarCurso():
         self.estado.pack
         self.estado.place(x=180,y=330)
         
-        agregar = Button(self.frame,bg="#447cb6",text="Agregar",font=("Consolas",12))
+        agregar = Button(self.frame,bg="#447cb6",text="Agregar",font=("Consolas",12),command=self.agregar)
         agregar.pack
         agregar.place(x=50,y=380)
         
@@ -339,6 +341,30 @@ class AgregarCurso():
         regresar.place(x=200,y=380)
         
         self.frame.mainloop()
+    
+    def agregar(self):
+        
+        codigo = self.codigo.get("1.0","end").replace("\n","")
+        nombre = self.nombre.get("1.0","end").replace("\n","")
+        requisito = self.requisito.get("1.0","end").replace("\n","")
+        semestre = self.semestre.get("1.0","end").replace("\n","")
+        opcional = self.opcional.get("1.0","end").replace("\n","")
+        creditos = self.creditos.get("1.0","end").replace("\n","")
+        estado = self.estado.get("1.0","end").replace("\n","")
+        
+        print(codigo," ",nombre," ",requisito," ",semestre," ",opcional," ",creditos," ",estado)
+        
+        cursos = self.agreCurso(codigo,nombre,requisito,semestre,opcional,creditos,estado)
+        
+        for curso in cursos:
+            print(curso.getCodigo()," ",curso.getNombre())
+        
+        messagebox.showinfo("Información", "Curso Agregado con éxito.")
+    
+    def agreCurso(self,codigo,nombre,requisito,semestre,opcional,creditos,estado):
+        curso = Cursos(codigo,nombre,requisito,semestre,opcional,creditos,estado)
+        cursos.append(curso)
+        return cursos
     
     def regresar(self):
         self.agregarV.destroy()
@@ -457,5 +483,14 @@ class ConteoCreditos():
     def regresar(self):
         self.conteo.destroy()
         Menu()
+
+class IngresarCurso():
+    
+    def __init__(self,codigo,nombre,requisito,semestre,opcional,creditos,estado):
+        global cursos
+        
+        curso = Cursos(codigo,nombre,requisito,semestre,opcional,creditos,estado)
+        cursos.append(curso)
+        return cursos
 
 a = Menu()
