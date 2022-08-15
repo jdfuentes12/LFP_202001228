@@ -1,3 +1,5 @@
+import code
+from mailbox import NoSuchMailboxError
 from select import select
 from tkinter import *
 from tkinter import filedialog
@@ -13,8 +15,22 @@ from Analizador import Analizador
 #ruta del archivo  prueba :v
 
 global cursos
+global codigo
+global nombre
+global requisito
+global semestre
+global opcional
+global creditos
+global estado
 cursos = []
-global contador
+codigo = []
+nombre = []
+requisito = []
+semestre = []
+opcional = []
+creditos = []
+estado = []
+
 class Menu():
 
     def __init__(self):
@@ -112,7 +128,14 @@ class CargarArchivo():
         cursos = self.Analizador(resultado)
         
         for curso in cursos:
-            print(curso.getCodigo()," ",curso.getNombre())
+            codigo = curso.getCodigo()
+            nombre = curso.getNombre()
+            requisito = curso.getRequisitos()
+            semestre = curso.getSemestre()
+            opcional = curso.getOpcional()
+            creditos = curso.getCreditos()
+            estado = curso.getEstado()
+            print(codigo," ",nombre," ",requisito," ",semestre," ",opcional," ",creditos," ",estado)
         
     def Analizador(self, ruta):
         
@@ -120,7 +143,6 @@ class CargarArchivo():
             objeto = open(ruta,'r+',encoding='utf-8')
             lineas = objeto.readlines()
             objeto.close()
-            
             
             for linea in lineas:
                 data = linea.split(',')
@@ -137,9 +159,6 @@ class CargarArchivo():
     def regresar(self):
         self.cargar.destroy()
         Menu()
-
-    global cursos
-    cursos = []
     
     print("esta en el modulo analizador")
     def AgregarCurso(codigo,nombre,requisito,semestre,opcional,creditos,estado):
@@ -249,11 +268,11 @@ class ListaCursos():
         regresar.pack 
         regresar.place(x=300,y=300)
         
-        #tabla.insert("",END,values=("100","prueba","0","2","0","5","0"))
+        #tabla.insert("",END,values=("100","prueba","0","2","0","5","0"))        
         for i in cursos:
-            tabla.insert("",END,values=(cursos.getCodigo(),cursos.getNombre,cursos.getRequisito(),cursos.getSemestre(),cursos.getOpcional(),cursos.getCreditos(),cursos.getEStado()))
-        
-        
+            print(codigo," ",nombre," ",requisito," ",semestre," ",opcional," ",creditos," ",estado)
+            #tabla.insert("",END,values=(codigo,nombre,requisito,semestre,opcional,creditos,estado))
+
         self.frame.mainloop()
     
     def regresar(self):

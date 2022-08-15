@@ -24,13 +24,13 @@ class Cursos():
         return self.semestre
     
     def getOpcional(self):
-        return self.semestre
+        return self.opcional
     
     def getCreditos(self):
         return self.creditos
     
     def getEstado(self):
-        return self.estado
+        return self.estado[0]
     
     #set de la clase
     def setCodigo(self,codigo):
