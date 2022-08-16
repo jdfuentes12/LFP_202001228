@@ -1,15 +1,11 @@
-import code
-from mailbox import NoSuchMailboxError
+from cgi import print_arguments
 from select import select
 from tkinter import *
-from tkinter import filedialog
 from tkinter import ttk 
-import tkinter as tk
-from tkinter import font
 from traceback import print_tb
 from Cursos import Cursos
 from tkinter import messagebox
-from Analizador import Analizador
+
 
 #C:\Users\jose2\OneDrive\Escritorio\archivo.lfp
 #ruta del archivo  prueba :v
@@ -363,23 +359,43 @@ class AgregarCurso():
     
     def agregar(self):
         
-        codigo = self.codigo.get("1.0","end").replace("\n","")
-        nombre = self.nombre.get("1.0","end").replace("\n","")
-        requisito = self.requisito.get("1.0","end").replace("\n","")
-        semestre = self.semestre.get("1.0","end").replace("\n","")
-        opcional = self.opcional.get("1.0","end").replace("\n","")
-        creditos = self.creditos.get("1.0","end").replace("\n","")
-        estado = self.estado.get("1.0","end").replace("\n","")
+        codigoA = self.codigo.get("1.0","end").replace("\n","")
+        nombreA = self.nombre.get("1.0","end").replace("\n","")
+        requisitoA = self.requisito.get("1.0","end").replace("\n","")
+        semestreA = self.semestre.get("1.0","end").replace("\n","")
+        opcionalA = self.opcional.get("1.0","end").replace("\n","")
+        creditosA = self.creditos.get("1.0","end").replace("\n","")
+        estadoA = self.estado.get("1.0","end").replace("\n","")
         
-        print(codigo," ",nombre," ",requisito," ",semestre," ",opcional," ",creditos," ",estado)
+        print(codigoA," ",nombreA," ",requisitoA," ",semestreA," ",opcionalA," ",creditosA," ",estadoA)
         
-        cursos = self.agreCurso(codigo,nombre,requisito,semestre,opcional,creditos,estado)
+        cursos = self.agreCurso(codigoA,nombreA,requisitoA,semestreA,opcionalA,creditosA,estadoA)
+        
+        analizador = 0
         
         for curso in cursos:
+            if (analizador == 0):
+                if (codigoA == curso.getCodigo()):
+                    analizador = 1
+                    print("CURSO YA EXISTENTE")
+                    messagebox.showwarning("Advertencia", "Curso ya existente en la base de datos.\nIntente nuevamente")
             print(curso.getCodigo()," ",curso.getNombre())
         
-        messagebox.showinfo("Información", "Curso Agregado con éxito.")
-    
+        if (analizador == 0):
+            cursos = self.agreCurso(codigoA,nombreA,requisitoA,semestreA,opcionalA,creditosA,estadoA)
+            for curso in cursos:
+                print(curso.getCodigo()," ",curso.getNombre())
+                
+            self.codigo.delete("1.0","end")
+            self.nombre.delete("1.0","end")
+            self.requisito.delete("1.0","end")
+            self.semestre.delete("1.0","end")
+            self.opcional.delete("1.0","end")
+            self.creditos.delete("1.0","end")
+            self.estado.delete("1.0","end")
+            messagebox.showinfo("Información", "Curso Agregado con éxito.")
+        
+
     def agreCurso(self,codigo,nombre,requisito,semestre,opcional,creditos,estado):
         curso = Cursos(codigo,nombre,requisito,semestre,opcional,creditos,estado)
         cursos.append(curso)
@@ -414,7 +430,7 @@ class EliminarCuro():
         self.ruta = Text(self.frame, height = 1, width = 25)
         self.ruta.place(x=200,y=50)
 
-        eliminar = Button(self.frame,bg="#42d35c",text="Seleccionar",font=("Consolas",12))
+        eliminar = Button(self.frame,bg="#42d35c",text="Seleccionar",font=("Consolas",12),command=self.eliminarCurso)
         eliminar.pack
         eliminar.place(x=150,y=100)
 
@@ -425,6 +441,33 @@ class EliminarCuro():
 
         self.frame.mainloop()
         
+    def eliminarCurso(self):
+        print("ELIMINAR CURSO")
+        cursoEliminar = self.ruta.get("1.0","end").replace("\n","")
+        print(cursoEliminar)
+        
+        evaluacion = 0
+        
+        for curso in cursos:
+            if(evaluacion == 0):
+                if (cursoEliminar == curso.getCodigo()):
+                    print("el curso seleccionado es: ",curso.getNombre())
+                    evaluacion = 1
+                    eliminadoC = curso.getNombre()
+                    
+                    for curso in cursos:
+                        print(curso.getCodigo()," ",curso.getNombre())
+
+                    messagebox.showinfo("Información",("Curso", eliminadoC," fue eliminado con éxito."))
+                    
+                    break
+        
+        if (evaluacion == 0 ):
+            print("EL CURSO NO ESTA EN LA BASE DE DATOS")
+            messagebox.showinfo("Error", "Curso no encontrado en la base de datos")
+                
+        
+    
     def regresar(self):
         self.eliminar.destroy()
         GestionarCurso()
