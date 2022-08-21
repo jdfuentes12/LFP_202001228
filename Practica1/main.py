@@ -125,8 +125,8 @@ class CargarArchivo():
             codigo = curso.getCodigo()
             nombre = curso.getNombre()
             requisito = curso.getRequisitos()
-            semestre = curso.getSemestre()
             opcional = curso.getOpcional()
+            semestre = curso.getSemestre()
             creditos = curso.getCreditos()
             estado = curso.getEstado()
             print(codigo," ",nombre," ",requisito," ",semestre," ",opcional," ",creditos," ",estado)
@@ -326,21 +326,21 @@ class AgregarCurso():
         self.requisito.pack
         self.requisito.place(x=180,y=130)
         
-        s = Label(self.frame,bg="#42d35c",text="Semestre:",font=("Consolas",13))
+        s = Label(self.frame,bg="#42d35c",text="Opcional:",font=("Consolas",13))
         s.pack
         s.place(x=30,y=180)
         
-        self.semestre = Text(self.frame,height=1,width=20,font=("Consolas",13))
-        self.semestre.pack
-        self.semestre.place(x=180,y=180)
+        self.opcional = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.opcional.pack
+        self.opcional.place(x=180,y=180)
         
-        o = Label(self.frame,bg="#42d35c",text="Opcional:",font=("Consolas",13))
+        o = Label(self.frame,bg="#42d35c",text="Semetre:",font=("Consolas",13))
         o.pack
         o.place(x=30,y=230)
         
-        self.opcional = Text(self.frame,height=1,width=20,font=("Consolas",13))
-        self.opcional.pack
-        self.opcional.place(x=180,y=230)
+        self.semestre = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.semestre.pack
+        self.semestre.place(x=180,y=230)
         
         cr = Label(self.frame,bg="#42d35c",text="Créditos:",font=("Consolas",13))
         cr.pack
@@ -406,8 +406,8 @@ class AgregarCurso():
             self.estado.delete("1.0","end")
             messagebox.showinfo("Información", "Curso Agregado con éxito.")
         
-    def agreCurso(self,codigo,nombre,requisito,semestre,opcional,creditos,estado):
-        curso = Cursos(codigo,nombre,requisito,semestre,opcional,creditos,estado)
+    def agreCurso(self,codigo,nombre,requisito,opcional,semestre,creditos,estado):
+        curso = Cursos(codigo,nombre,requisito,opcional,semestre,creditos,estado)
         cursos.append(curso)
         return cursos
     
@@ -610,11 +610,10 @@ class ConteoCreditos():
         self.conteo.configure(bg="#18b9e4")
         self.container()
     
-    def container(self):
+    def container(self):    
         self.frame = Frame(height=550,width=650)
         self.frame.config(bg="#00e4ce")
         self.frame.pack(padx=25,pady=25)
-
 
         aprobados = Label(self.frame,bg="#42d35c",text="Créditos Aprobados:",font=("Consolas",13))
         aprobados.pack
@@ -683,6 +682,16 @@ class ConteoCreditos():
     def conteoObligatorios(self):
         seleccionado = self.combo.get()
         print("usted selecciono ",seleccionado)
+        contar = 0
+        
+        for curso in cursos:
+            if curso.getOpcional == 1:
+                if (curso.getSemestre <= seleccionado):
+                    contar = int(curso.getCreditos) + contar
+                    
+                    
+        
+        
     
     def conteoSemestre(self):
         seleccionado = self.combo1.get()

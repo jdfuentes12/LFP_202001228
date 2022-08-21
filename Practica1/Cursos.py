@@ -1,6 +1,6 @@
 class Cursos():
     
-    def __init__(self,codigo,nombre,requisitos,semestre,opcional,creditos,estado):
+    def __init__(self,codigo,nombre,requisitos,opcional,semestre,creditos,estado):
         self.codigo = codigo
         self.nombre = nombre
         self.requisitos = requisitos

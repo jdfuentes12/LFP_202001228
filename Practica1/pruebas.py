@@ -63,7 +63,7 @@ for i in range(10):
     sort.insert('', 'end', iid='line%i' % i,
                 values=(i+50, i+40, i+30, i+20, i+10))
     visual_drag.insert('', 'end', iid='line%i' % i,
-                       values=(i+50, i+40, i+30, i+20, i+10))
+                    values=(i+50, i+40, i+30, i+20, i+10))
 
 sort.grid()
 '''sort.bind("<ButtonPress>", down)
