@@ -1,11 +1,9 @@
-from cgi import print_arguments
 from select import select
 from tkinter import *
-from tkinter import ttk 
-from traceback import print_tb
+from tkinter import ttk
+from webbrowser import get 
 from Cursos import Cursos
 from tkinter import messagebox
-
 
 #C:\Users\jose2\OneDrive\Escritorio\archivo.lfp
 #ruta del archivo  prueba :v
@@ -188,7 +186,7 @@ class GestionarCurso():
         agregar.pack
         agregar.place(x=150,y=100)
 
-        editar = Button(self.frame,bg="#447cb6",text="Editar Cursos",font=("Consolas",12))
+        editar = Button(self.frame,bg="#447cb6",text="Editar Cursos",font=("Consolas",12),command=self.editar)
         editar.pack
         editar.place(x=150,y=150)
         
@@ -217,7 +215,10 @@ class GestionarCurso():
     def regresar(self):
         self.gestionar.destroy()
         Menu()
-
+    
+    def editar(self):
+        self.gestionar.destroy()
+        EditarCurso()
 #todo el codigo de las ventanas de gestionar cursos 
 #--------------------------------------INICIO DE GESTION DE CURSOS--------------------------------------------------
 class ListaCursos():
@@ -225,20 +226,20 @@ class ListaCursos():
         self.lista = Tk()
         self.lista.title("Lista de Cursos")
         self.lista.resizable(1,1)
-        self.lista.geometry("750x400")
+        self.lista.geometry("800x400")
         self.lista.configure(bg="#18b9e4")
         self.contenido()
         
     def contenido(self):
-        self.frame = Frame(height=1000,width=1000)
+        self.frame = Frame(height=850,width=800)
         self.frame.config(bg="#00e4ce")
         self.frame.pack(padx=25,pady=25)
         
         # define columns  
-        columns = ('codigo','nombre','pre_requisitos','opcional','semestre','creditos','estado')
+        columns = ['codigo','nombre','pre_requisitos','opcional','semestre','creditos','estado']
         
         tabla = ttk.Treeview(self.frame, columns=columns, show='headings')
-        tabla.place(x=100,y=50)
+        #tabla.place(x=100,y=50)
         
         tabla.column('codigo',width=80,anchor=CENTER)
         tabla.column('nombre',width=120,anchor=CENTER)
@@ -257,17 +258,28 @@ class ListaCursos():
         tabla.heading('creditos', text='Créditos')
         tabla.heading('estado', text='Estado')
         
-        tabla.grid(row=0, column=0, sticky='nsew')
-        tabla.pack
+        visual_drag = ttk.Treeview(self.frame,columns=columns,show='headings')
+        
+        for cols in columns:
+            tabla.heading(cols,text=cols)
+            visual_drag.heading(cols,text=cols)
+        
+        curso = 0
+        
+        for i in cursos:
+            tabla.insert('','end',iid='line%i'% i,
+                        values=(curso.getCodigo(),curso.getNombre(),curso.getRequisitos(),curso.getSemestre(),curso.getOpcional(),curso.getCreditos(),curso.getEstado()))
+            visual_drag.insert('','end',idd='line%i' % i,
+                        values=(curso.getCodigo(),curso.getNombre(),curso.getRequisitos(),curso.getSemestre(),curso.getOpcional(),curso.getCreditos(),curso.getEstado()))
+            curso = curso + 1
+        tabla.grid()
         
         regresar = Button(self.lista,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
         regresar.pack 
         regresar.place(x=300,y=300)
         
-        #tabla.insert("",END,values=("100","prueba","0","2","0","5","0"))        
-        for i in cursos:
-            print(codigo," ",nombre," ",requisito," ",semestre," ",opcional," ",creditos," ",estado)
-            #tabla.insert("",END,values=(codigo,nombre,requisito,semestre,opcional,creditos,estado))
+        tabla.insert("",END,values=("100","prueba","0","2","0","5","0"))        
+        
 
         self.frame.mainloop()
     
@@ -277,7 +289,6 @@ class ListaCursos():
 
 class AgregarCurso():
     def __init__(self):
-        print("agregar curso")
         self.agregarV = Tk()
         self.agregarV.title("Agregar Curso")
         self.agregarV.resizable(0,0)
@@ -395,7 +406,6 @@ class AgregarCurso():
             self.estado.delete("1.0","end")
             messagebox.showinfo("Información", "Curso Agregado con éxito.")
         
-
     def agreCurso(self,codigo,nombre,requisito,semestre,opcional,creditos,estado):
         curso = Cursos(codigo,nombre,requisito,semestre,opcional,creditos,estado)
         cursos.append(curso)
@@ -406,7 +416,126 @@ class AgregarCurso():
         GestionarCurso()
 
 class EditarCurso():
-    print("editar")
+    def __init__(self):
+        self.eliminar = Tk()
+        self.eliminar.title("Eliminar Curso")
+        self.eliminar.resizable(0,0)
+        self.eliminar.geometry("500x550")
+        self.eliminar.configure(bg="#18b9e4")
+        self.container()
+
+    def container(self):
+        self.frame = Frame(height=500,width=600)
+        self.frame.config(bg="#00e4ce")
+        self.frame.pack(padx=25,pady=25)
+        
+        c = Label(self.frame,bg="#42d35c",text="Código:",font=("Consolas",13))
+        c.pack
+        c.place(x=30,y=30)
+        
+        self.codigo = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.codigo.pack
+        self.codigo.place(x=180,y=30)
+        
+        n = Label(self.frame,bg="#42d35c",text="Nombre:",font=("Consolas",13))
+        n.pack
+        n.place(x=30,y=80)
+        
+        self.nombre = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.nombre.pack
+        self.nombre.place(x=180,y=80)
+        
+        p = Label(self.frame,bg="#42d35c",text="Pre Requisito:",font=("Consolas",13))
+        p.pack
+        p.place(x=30,y=130)
+        
+        self.requisito = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.requisito.pack
+        self.requisito.place(x=180,y=130)
+        
+        s = Label(self.frame,bg="#42d35c",text="Semestre:",font=("Consolas",13))
+        s.pack
+        s.place(x=30,y=180)
+        
+        self.semestre = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.semestre.pack
+        self.semestre.place(x=180,y=180)
+        
+        o = Label(self.frame,bg="#42d35c",text="Opcional:",font=("Consolas",13))
+        o.pack
+        o.place(x=30,y=230)
+        
+        self.opcional = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.opcional.pack
+        self.opcional.place(x=180,y=230)
+        
+        cr = Label(self.frame,bg="#42d35c",text="Créditos:",font=("Consolas",13))
+        cr.pack
+        cr.place(x=30,y=280)
+        
+        self.creditos = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.creditos.pack
+        self.creditos.place(x=180,y=280)
+        
+        e = Label(self.frame,bg="#42d35c",text="Estado:",font=("Consolas",13))
+        e.pack
+        e.place(x=30,y=330)
+        
+        self.estado = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.estado.pack
+        self.estado.place(x=180,y=330)
+        
+        editar = Button(self.frame,bg="#447cb6",text="Editar",font=("Consolas",12))
+        editar.pack
+        editar.place(x=50,y=380)
+        
+        regresar = Button(self.frame,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
+        regresar.pack
+        regresar.place(x=200,y=380)
+        
+        self.frame.mainloop()
+        
+    def editar(self):
+        contenido = self.codigo.get("1.0","end").replace("\n","")
+        
+        codigoE = self.codigo.get("1.0","end").replace("\n","")
+        nombreE = self.nombre.get("1.0","end").replace("\n","")
+        requisitoE = self.requisito.get("1.0","end").replace("\n","")
+        semestreE = self.semestre.get("1.0","end").replace("\n","")
+        opcionalE = self.opcional.get("1.0","end").replace("\n","")
+        creditosE = self.creditos.get("1.0","end").replace("\n","")
+        estadoE = self.estado.get("1.0","end").replace("\n","")
+        
+        self.evaluacion = 0
+        
+        for curso in cursos:
+            if(self.evaluacion == 0):
+                if(contenido == curso.getCodigo()):
+                    self.evaluacion = 1
+                    curso.getCodigo 
+                    messagebox.showinfo("Información","El curso seleccionado es valido")
+        
+        if (self.evaluacion == 0):
+            messagebox.showerror("Error", "Curso no encontrado en la base de datos")
+    
+    def editar(self):
+        print("EDITANDO CURSO")
+        codigoE = self.codigo.get("1.0","end").replace("\n","")
+        nombreE = self.nombre.get("1.0","end").replace("\n","")
+        requisitoE = self.requisito.get("1.0","end").replace("\n","")
+        semestreE = self.semestre.get("1.0","end").replace("\n","")
+        opcionalE = self.opcional.get("1.0","end").replace("\n","")
+        creditosE = self.creditos.get("1.0","end").replace("\n","")
+        estadoE = self.estado.get("1.0","end").replace("\n","")
+    
+
+    def regresar(self):
+        self.eliminar.destroy()
+        GestionarCurso()
+
+class Edicion():
+    def __init__(self) -> None:
+        pass
 
 class EliminarCuro():
     def __init__(self):
@@ -416,7 +545,7 @@ class EliminarCuro():
         self.eliminar.geometry("650x300")
         self.eliminar.configure(bg="#18b9e4")
         self.container()
-
+    
     def container(self):
         self.frame = Frame(height=400,width=600)
         self.frame.config(bg="#00e4ce")
@@ -465,9 +594,7 @@ class EliminarCuro():
         if (evaluacion == 0 ):
             print("EL CURSO NO ESTA EN LA BASE DE DATOS")
             messagebox.showinfo("Error", "Curso no encontrado en la base de datos")
-                
         
-    
     def regresar(self):
         self.eliminar.destroy()
         GestionarCurso()
@@ -493,21 +620,29 @@ class ConteoCreditos():
         aprobados.pack
         aprobados.place(x=20,y=20)
 
-
+        self.aprobadosLabel = Label(self.frame,bg="#2e77d9",text="Esperando selección...",font=("Consolas",13))
+        self.aprobadosLabel.pack
+        self.aprobadosLabel.place(x=220,y=20)
+        
         cursado = Label(self.frame,bg="#42d35c" , text="Créditos Cursando:",font=("Consolas",13))
         cursado.pack
         cursado.place(x=20,y=70)
         
+        self.cursandoLabel = Label(self.frame,bg="#2e77d9",text="Esperando selección...",font=("Consolas",13))
+        self.cursandoLabel.pack
+        self.cursandoLabel.place(x=220,y=70)
+        
         pendientes = Label(self.frame,bg="#42d35c",text="Créditos Pendientes", font=("Consolas",13))
         pendientes.pack
         pendientes.place(x=20,y=120)
+        
+        self.pendientesLabel = Label(self.frame,bg="#2e77d9",text="Esperando selección...",font=("Consolas",13))
+        self.pendientesLabel.pack
+        self.pendientesLabel.place(x=220,y=120)
 
         obligatorios = Label(self.frame,bg="#42d35c",text="Créditos Obligatorios hasta semestre N:",font=("Consolas",13))
         obligatorios.pack
         obligatorios.place(x=20,y=170)
-
-        obligariosCreditos = Text(self.frame, height = 1, width = 10)
-        obligariosCreditos.place(x=400,y=170)
         
         osemestre = Label(self.frame,bg="#42d35c",text="Semestre",font=("Consolas",13))
         osemestre.pack
@@ -517,42 +652,41 @@ class ConteoCreditos():
         csemestre.pack
         csemestre.place(x=20,y=270)
 
-        cretidosSemestre = Text(self.frame,height=1,width=10)
-        cretidosSemestre.place(x=250,y=270)
-
         csemestre = Label(self.frame,bg="#42d35c",text="Semestre",font=("Consolas",13))
         csemestre.pack
         csemestre.place(x=50,y=320)
 
         regresar = Button(self.frame,text="Regresa",bg="#447cb6",font=("Consolas",13),command=self.regresar)
         regresar.pack
-        regresar.place(x=480,y=370)
-
+        regresar.place(x=500,y=365)
         
-        combo = ttk.Combobox(values=["1","2","3","4","5","6","7","8","9","10","11","12"])
-        #codigo para realizar la accion despues de seleccionar una de las opcciones
-        #combo.bind("<<ComboboxSelected>>", selection_changed)
-        combo.place(x=200,y=250)
+        self.combo = ttk.Combobox(self.frame,values=["1","2","3","4","5","6","7","8","9","10","11","12"])
+        self.combo.place(x=200,y=220)
         
-        combo1 = ttk.Combobox(values=["1","2","3","4","5","6","7","8","9","10","11","12"])
-        #codigo para realizar la accion despues de seleccionar una de las opcciones
-        #combo.bind("<<ComboboxSelected>>", selection_changed)
-        combo1.place(x=200,y=350)
-
+        self.conteoO = Button(self.frame,text="Conteo",bg="#23a0b5",font=("Consolas",13),command=self.conteoObligatorios)
+        self.conteoO.pack
+        self.conteoO.place(x=375,y=215)
+        
+        self.combo1 = ttk.Combobox(self.frame,values=["1","2","3","4","5","6","7","8","9","10","11","12"])
+        self.combo1.place(x=200,y=320)
+        
+        self.conteoS = Button(self.frame,text="Conteo",bg="#23a0b5",font=("Consolas",13),command=self.conteoSemestre)
+        self.conteoS.pack
+        self.conteoS.place(x=375,y=315)
         
         self.frame.mainloop()
 
     def regresar(self):
         self.conteo.destroy()
         Menu()
-
-class IngresarCurso():
     
-    def __init__(self,codigo,nombre,requisito,semestre,opcional,creditos,estado):
-        global cursos
+    def conteoObligatorios(self):
+        seleccionado = self.combo.get()
+        print("usted selecciono ",seleccionado)
+    
+    def conteoSemestre(self):
+        seleccionado = self.combo1.get()
+        print("usted selecciono ",seleccionado)
         
-        curso = Cursos(codigo,nombre,requisito,semestre,opcional,creditos,estado)
-        cursos.append(curso)
-        return cursos
-
+        
 a = Menu()
