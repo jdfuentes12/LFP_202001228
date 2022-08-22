@@ -399,6 +399,8 @@ class AgregarCurso():
         self.agregarV.destroy()
         GestionarCurso()
 
+global cursoAE
+
 class EditarCurso():
     def __init__(self):
         self.eliminar = Tk()
@@ -515,134 +517,6 @@ class EditarCurso():
 
     def regresar(self):
         self.eliminar.destroy()
-        GestionarCurso()
-
-class Edicion():
-    def __init__(self):
-        self.agregarV = Tk()
-        self.agregarV.title("Agregar Curso")
-        self.agregarV.resizable(0,0)
-        self.agregarV.geometry("430x500")
-        self.agregarV.configure(bg="#18b9e4")
-        self.container()
-    
-    def container(self):
-    
-        self.frame = Frame(height=500,width=600)
-        self.frame.config(bg="#00e4ce")
-        self.frame.pack(padx=25,pady=25)
-        
-        c = Label(self.frame,bg="#42d35c",text="Código:",font=("Consolas",13))
-        c.pack
-        c.place(x=30,y=30)
-        
-        self.codigo = Text(self.frame,height=1,width=20,font=("Consolas",13))
-        self.codigo.pack
-        self.codigo.place(x=180,y=30)
-        
-        n = Label(self.frame,bg="#42d35c",text="Nombre:",font=("Consolas",13))
-        n.pack
-        n.place(x=30,y=80)
-        
-        self.nombre = Text(self.frame,height=1,width=20,font=("Consolas",13))
-        self.nombre.pack
-        self.nombre.place(x=180,y=80)
-        
-        p = Label(self.frame,bg="#42d35c",text="Pre Requisito:",font=("Consolas",13))
-        p.pack
-        p.place(x=30,y=130)
-        
-        self.requisito = Text(self.frame,height=1,width=20,font=("Consolas",13))
-        self.requisito.pack
-        self.requisito.place(x=180,y=130)
-        
-        s = Label(self.frame,bg="#42d35c",text="Opcional:",font=("Consolas",13))
-        s.pack
-        s.place(x=30,y=180)
-        
-        self.opcional = Text(self.frame,height=1,width=20,font=("Consolas",13))
-        self.opcional.pack
-        self.opcional.place(x=180,y=180)
-        
-        o = Label(self.frame,bg="#42d35c",text="Semetre:",font=("Consolas",13))
-        o.pack
-        o.place(x=30,y=230)
-        
-        self.semestre = Text(self.frame,height=1,width=20,font=("Consolas",13))
-        self.semestre.pack
-        self.semestre.place(x=180,y=230)
-        
-        cr = Label(self.frame,bg="#42d35c",text="Créditos:",font=("Consolas",13))
-        cr.pack
-        cr.place(x=30,y=280)
-        
-        self.creditos = Text(self.frame,height=1,width=20,font=("Consolas",13))
-        self.creditos.pack
-        self.creditos.place(x=180,y=280)
-        
-        e = Label(self.frame,bg="#42d35c",text="Estado:",font=("Consolas",13))
-        e.pack
-        e.place(x=30,y=330)
-        
-        self.estado = Text(self.frame,height=1,width=20,font=("Consolas",13))
-        self.estado.pack
-        self.estado.place(x=180,y=330)
-        
-        agregar = Button(self.frame,bg="#447cb6",text="Agregar",font=("Consolas",12),command=self.agregar)
-        agregar.pack
-        agregar.place(x=50,y=380)
-        
-        regresar = Button(self.frame,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
-        regresar.pack
-        regresar.place(x=200,y=380)
-        
-        self.frame.mainloop()
-    
-    def agregar(self):
-        
-        codigoA = self.codigo.get("1.0","end").replace("\n","")
-        nombreA = self.nombre.get("1.0","end").replace("\n","")
-        requisitoA = self.requisito.get("1.0","end").replace("\n","")
-        semestreA = self.semestre.get("1.0","end").replace("\n","")
-        opcionalA = self.opcional.get("1.0","end").replace("\n","")
-        creditosA = self.creditos.get("1.0","end").replace("\n","")
-        estadoA = self.estado.get("1.0","end").replace("\n","")
-        
-        print(codigoA," ",nombreA," ",requisitoA," ",semestreA," ",opcionalA," ",creditosA," ",estadoA)
-        
-        cursos = self.agreCurso(codigoA,nombreA,requisitoA,semestreA,opcionalA,creditosA,estadoA)
-        
-        analizador = 0
-        
-        for curso in cursos:
-            if (analizador == 0):
-                if (codigoA == curso.getCodigo()):
-                    analizador = 1
-                    print("CURSO YA EXISTENTE")
-                    messagebox.showwarning("Advertencia", "Curso ya existente en la base de datos.\nIntente nuevamente")
-            print(curso.getCodigo()," ",curso.getNombre())
-        
-        if (analizador == 0):
-            cursos = self.agreCurso(codigoA,nombreA,requisitoA,semestreA,opcionalA,creditosA,estadoA)
-            for curso in cursos:
-                print(curso.getCodigo()," ",curso.getNombre())
-                
-            self.codigo.delete("1.0","end")
-            self.nombre.delete("1.0","end")
-            self.requisito.delete("1.0","end")
-            self.semestre.delete("1.0","end")
-            self.opcional.delete("1.0","end")
-            self.creditos.delete("1.0","end")
-            self.estado.delete("1.0","end")
-            messagebox.showinfo("Información", "Curso Agregado con éxito.")
-        
-    def agreCurso(self,codigo,nombre,requisito,opcional,semestre,creditos,estado):
-        curso = Cursos(codigo,nombre,requisito,opcional,semestre,creditos,estado)
-        cursos.append(curso)
-        return cursos
-    
-    def regresar(self):
-        self.agregarV.destroy()
         GestionarCurso()
 
 class EliminarCuro():
