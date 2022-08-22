@@ -1,29 +1,13 @@
-from select import select
 from tkinter import *
 from tkinter import ttk
-from webbrowser import get 
 from Cursos import Cursos
 from tkinter import messagebox
 
 #C:\Users\jose2\OneDrive\Escritorio\archivo.lfp
-#ruta del archivo  prueba :v
 
 global cursos
-global codigo
-global nombre
-global requisito
-global semestre
-global opcional
-global creditos
-global estado
 cursos = []
-codigo = []
-nombre = []
-requisito = []
-semestre = []
-opcional = []
-creditos = []
-estado = []
+
 
 class Menu():
 
@@ -129,7 +113,7 @@ class CargarArchivo():
             semestre = curso.getSemestre()
             creditos = curso.getCreditos()
             estado = curso.getEstado()
-            print(codigo," ",nombre," ",requisito," ",semestre," ",opcional," ",creditos," ",estado)
+            print(codigo,"\t",nombre,"\t",requisito,"\t",opcional,"\t",semestre,"\t",creditos,"\t",estado)
         
     def Analizador(self, ruta):
         
@@ -155,9 +139,9 @@ class CargarArchivo():
         Menu()
     
     print("esta en el modulo analizador")
-    def AgregarCurso(codigo,nombre,requisito,semestre,opcional,creditos,estado):
+    def AgregarCurso(codigo,nombre,requisito,opcional,semestre,creditos,estado):
         
-        curso = Cursos(codigo,nombre,requisito,semestre,opcional,creditos,estado)
+        curso = Cursos(codigo,nombre,requisito,opcional,semestre,creditos,estado)
         cursos.append(curso)
         messagebox.showinfo("Informacion", "Archivo Cargado con Exito")        
         return cursos
@@ -534,8 +518,132 @@ class EditarCurso():
         GestionarCurso()
 
 class Edicion():
-    def __init__(self) -> None:
-        pass
+    def __init__(self):
+        self.agregarV = Tk()
+        self.agregarV.title("Agregar Curso")
+        self.agregarV.resizable(0,0)
+        self.agregarV.geometry("430x500")
+        self.agregarV.configure(bg="#18b9e4")
+        self.container()
+    
+    def container(self):
+    
+        self.frame = Frame(height=500,width=600)
+        self.frame.config(bg="#00e4ce")
+        self.frame.pack(padx=25,pady=25)
+        
+        c = Label(self.frame,bg="#42d35c",text="Código:",font=("Consolas",13))
+        c.pack
+        c.place(x=30,y=30)
+        
+        self.codigo = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.codigo.pack
+        self.codigo.place(x=180,y=30)
+        
+        n = Label(self.frame,bg="#42d35c",text="Nombre:",font=("Consolas",13))
+        n.pack
+        n.place(x=30,y=80)
+        
+        self.nombre = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.nombre.pack
+        self.nombre.place(x=180,y=80)
+        
+        p = Label(self.frame,bg="#42d35c",text="Pre Requisito:",font=("Consolas",13))
+        p.pack
+        p.place(x=30,y=130)
+        
+        self.requisito = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.requisito.pack
+        self.requisito.place(x=180,y=130)
+        
+        s = Label(self.frame,bg="#42d35c",text="Opcional:",font=("Consolas",13))
+        s.pack
+        s.place(x=30,y=180)
+        
+        self.opcional = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.opcional.pack
+        self.opcional.place(x=180,y=180)
+        
+        o = Label(self.frame,bg="#42d35c",text="Semetre:",font=("Consolas",13))
+        o.pack
+        o.place(x=30,y=230)
+        
+        self.semestre = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.semestre.pack
+        self.semestre.place(x=180,y=230)
+        
+        cr = Label(self.frame,bg="#42d35c",text="Créditos:",font=("Consolas",13))
+        cr.pack
+        cr.place(x=30,y=280)
+        
+        self.creditos = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.creditos.pack
+        self.creditos.place(x=180,y=280)
+        
+        e = Label(self.frame,bg="#42d35c",text="Estado:",font=("Consolas",13))
+        e.pack
+        e.place(x=30,y=330)
+        
+        self.estado = Text(self.frame,height=1,width=20,font=("Consolas",13))
+        self.estado.pack
+        self.estado.place(x=180,y=330)
+        
+        agregar = Button(self.frame,bg="#447cb6",text="Agregar",font=("Consolas",12),command=self.agregar)
+        agregar.pack
+        agregar.place(x=50,y=380)
+        
+        regresar = Button(self.frame,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
+        regresar.pack
+        regresar.place(x=200,y=380)
+        
+        self.frame.mainloop()
+    
+    def agregar(self):
+        
+        codigoA = self.codigo.get("1.0","end").replace("\n","")
+        nombreA = self.nombre.get("1.0","end").replace("\n","")
+        requisitoA = self.requisito.get("1.0","end").replace("\n","")
+        semestreA = self.semestre.get("1.0","end").replace("\n","")
+        opcionalA = self.opcional.get("1.0","end").replace("\n","")
+        creditosA = self.creditos.get("1.0","end").replace("\n","")
+        estadoA = self.estado.get("1.0","end").replace("\n","")
+        
+        print(codigoA," ",nombreA," ",requisitoA," ",semestreA," ",opcionalA," ",creditosA," ",estadoA)
+        
+        cursos = self.agreCurso(codigoA,nombreA,requisitoA,semestreA,opcionalA,creditosA,estadoA)
+        
+        analizador = 0
+        
+        for curso in cursos:
+            if (analizador == 0):
+                if (codigoA == curso.getCodigo()):
+                    analizador = 1
+                    print("CURSO YA EXISTENTE")
+                    messagebox.showwarning("Advertencia", "Curso ya existente en la base de datos.\nIntente nuevamente")
+            print(curso.getCodigo()," ",curso.getNombre())
+        
+        if (analizador == 0):
+            cursos = self.agreCurso(codigoA,nombreA,requisitoA,semestreA,opcionalA,creditosA,estadoA)
+            for curso in cursos:
+                print(curso.getCodigo()," ",curso.getNombre())
+                
+            self.codigo.delete("1.0","end")
+            self.nombre.delete("1.0","end")
+            self.requisito.delete("1.0","end")
+            self.semestre.delete("1.0","end")
+            self.opcional.delete("1.0","end")
+            self.creditos.delete("1.0","end")
+            self.estado.delete("1.0","end")
+            messagebox.showinfo("Información", "Curso Agregado con éxito.")
+        
+    def agreCurso(self,codigo,nombre,requisito,opcional,semestre,creditos,estado):
+        curso = Cursos(codigo,nombre,requisito,opcional,semestre,creditos,estado)
+        cursos.append(curso)
+        return cursos
+    
+    def regresar(self):
+        self.agregarV.destroy()
+        GestionarCurso()
 
 class EliminarCuro():
     def __init__(self):
@@ -576,21 +684,29 @@ class EliminarCuro():
         print(cursoEliminar)
         
         evaluacion = 0
-        
+        contador = 0
         for curso in cursos:
             if(evaluacion == 0):
+                
                 if (cursoEliminar == curso.getCodigo()):
-                    print("el curso seleccionado es: ",curso.getNombre())
+                    print(curso.getNombre())
                     evaluacion = 1
                     eliminadoC = curso.getNombre()
+                    messagebox.showinfo("Información",("Curso", eliminadoC," fue eliminado con éxito."))
+                    cursos.pop(contador)
                     
                     for curso in cursos:
-                        print(curso.getCodigo()," ",curso.getNombre())
-
-                    messagebox.showinfo("Información",("Curso", eliminadoC," fue eliminado con éxito."))
-                    
+                        codigo = curso.getCodigo()
+                        nombre = curso.getNombre()
+                        requisito = curso.getRequisitos()
+                        opcional = curso.getOpcional()
+                        semestre = curso.getSemestre()
+                        creditos = curso.getCreditos()
+                        estado = curso.getEstado()
+                        print(codigo,"\t",nombre,"\t",requisito,"\t",opcional,"\t",semestre,"\t",creditos,"\t",estado)
                     break
-        
+            contador = contador + 1
+
         if (evaluacion == 0 ):
             print("EL CURSO NO ESTA EN LA BASE DE DATOS")
             messagebox.showinfo("Error", "Curso no encontrado en la base de datos")
@@ -608,9 +724,11 @@ class ConteoCreditos():
         self.conteo.resizable(0,0)
         self.conteo.geometry("650x500")
         self.conteo.configure(bg="#18b9e4")
+        
         self.container()
     
-    def container(self):    
+    def container(self):
+        
         self.frame = Frame(height=550,width=650)
         self.frame.config(bg="#00e4ce")
         self.frame.pack(padx=25,pady=25)
@@ -619,7 +737,7 @@ class ConteoCreditos():
         aprobados.pack
         aprobados.place(x=20,y=20)
 
-        self.aprobadosLabel = Label(self.frame,bg="#2e77d9",text="Esperando selección...",font=("Consolas",13))
+        self.aprobadosLabel = Label(self.frame,bg="#2e77d9",font=("Consolas",13))
         self.aprobadosLabel.pack
         self.aprobadosLabel.place(x=220,y=20)
         
@@ -627,7 +745,7 @@ class ConteoCreditos():
         cursado.pack
         cursado.place(x=20,y=70)
         
-        self.cursandoLabel = Label(self.frame,bg="#2e77d9",text="Esperando selección...",font=("Consolas",13))
+        self.cursandoLabel = Label(self.frame,bg="#2e77d9",font=("Consolas",13))
         self.cursandoLabel.pack
         self.cursandoLabel.place(x=220,y=70)
         
@@ -635,13 +753,18 @@ class ConteoCreditos():
         pendientes.pack
         pendientes.place(x=20,y=120)
         
-        self.pendientesLabel = Label(self.frame,bg="#2e77d9",text="Esperando selección...",font=("Consolas",13))
+        self.pendientesLabel = Label(self.frame,bg="#2e77d9",font=("Consolas",13))
         self.pendientesLabel.pack
         self.pendientesLabel.place(x=220,y=120)
 
         obligatorios = Label(self.frame,bg="#42d35c",text="Créditos Obligatorios hasta semestre N:",font=("Consolas",13))
         obligatorios.pack
         obligatorios.place(x=20,y=170)
+        
+        self.obligatirios = Label(self.frame,bg="#2e77d9",text="Esperando...",font=("Consolas",13))
+        self.obligatirios.pack
+        self.obligatirios.place(x=400,y=170)
+        
         
         osemestre = Label(self.frame,bg="#42d35c",text="Semestre",font=("Consolas",13))
         osemestre.pack
@@ -650,7 +773,11 @@ class ConteoCreditos():
         csemestre=Label(self.frame,bg="#42d35c",text="Créditos del semestre:",font=("Consolas",13))
         csemestre.pack
         csemestre.place(x=20,y=270)
-
+        
+        self.creditosSemestre = Label(self.frame,bg="#2e77d9",text="Esperando...",font=("Consolas",13))
+        self.creditosSemestre.pack
+        self.creditosSemestre.place(x=250,y=270)
+        
         csemestre = Label(self.frame,bg="#42d35c",text="Semestre",font=("Consolas",13))
         csemestre.pack
         csemestre.place(x=50,y=320)
@@ -669,9 +796,34 @@ class ConteoCreditos():
         self.combo1 = ttk.Combobox(self.frame,values=["1","2","3","4","5","6","7","8","9","10","11","12"])
         self.combo1.place(x=200,y=320)
         
-        self.conteoS = Button(self.frame,text="Conteo",bg="#23a0b5",font=("Consolas",13),command=self.conteoSemestre)
+        self.conteoS = Button(self.frame,text="Conteo S",bg="#23a0b5",font=("Consolas",13),command=self.conteoSemestre)
         self.conteoS.pack
         self.conteoS.place(x=375,y=315)
+        
+        
+        conteoAprobados = 0
+        conteoCursando = 0
+        conteoPendiente = 0
+        print("hola")
+        
+        for curso in cursos:
+            estado = int(curso.getEstado())
+            if (estado == 0):
+                conteoAprobados = conteoAprobados + 1
+            elif (estado == 1):
+                conteoCursando = conteoCursando + 1
+        
+        for curso in cursos:
+            if curso.getOpcional() == "1":
+                estado = curso.getEstado()
+                if estado == "-1":
+                    conteoPendiente = conteoPendiente + 1
+        
+        print(conteoAprobados," ",conteoCursando," ",conteoPendiente)
+        
+        self.aprobadosLabel['text'] = conteoAprobados
+        self.cursandoLabel['text'] = conteoCursando
+        self.pendientesLabel['text'] = conteoPendiente
         
         self.frame.mainloop()
 
@@ -680,22 +832,44 @@ class ConteoCreditos():
         Menu()
     
     def conteoObligatorios(self):
-        seleccionado = self.combo.get()
-        print("usted selecciono ",seleccionado)
-        contar = 0
-        
-        for curso in cursos:
-            if curso.getOpcional == 1:
-                if (curso.getSemestre <= seleccionado):
-                    contar = int(curso.getCreditos) + contar
-                    
-                    
-        
-        
+        try:
+            seleccionado = self.combo.get()
+            contarCreditos = 0
+            limite = int(seleccionado)
+            if seleccionado != "":
+                for curso in cursos:
+                    if curso.getOpcional() == "1":
+                        if (int(curso.getSemestre()) <= limite):
+                            contarCreditos = int(curso.getCreditos()) + contarCreditos
+            else:
+                messagebox.showerror("Error", "Seleccione un semestre a evaluar.\nO valor ingresado no obtenido en la base de datos.")
+                
+            
+            self.obligatirios['text'] = contarCreditos
+        except:
+            messagebox.showerror("Error", "Ningun valor seleccionado")
     
     def conteoSemestre(self):
-        seleccionado = self.combo1.get()
-        print("usted selecciono ",seleccionado)
-        
-        
+        try:
+            seleccionado = self.combo1.get()
+            print("usted selecciono ",seleccionado)
+            contadorAprobados = 0
+            contadorCursando = 0
+            contadorPendiente = 0
+            
+            for curso in cursos:
+                if curso.getOpcional() == "0":
+                    contadorAprobados = int(curso.getCreditos()) + contadorAprobados
+                elif curso.getOpcional() == "1":
+                    contadorCursando = contadorCursando + int(curso.getCreditos())
+                elif curso.getOpcional() == "-1":
+                    contadorPendiente = contadorPendiente + int(curso.getCreditos())
+            
+            self.aprobadosLabel['text'] = contadorAprobados
+            self.cursandoLabel['text'] = contadorCursando
+            self.pendientesLabel['text'] = contadorPendiente
+            
+        except:
+            messagebox.showerror("Error", "Ningun valor seleccionado")
+
 a = Menu()
