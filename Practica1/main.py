@@ -3,11 +3,10 @@ from tkinter import ttk
 from Cursos import Cursos
 from tkinter import messagebox
 
-#C:\Users\jose2\OneDrive\Escritorio\archivo.lfp
+#C:\Users\jose2\Downloads\Pensum sistemas.lfp
 
 global cursos
 cursos = []
-
 
 class Menu():
 
@@ -401,6 +400,55 @@ class AgregarCurso():
 
 global cursoAE
 
+class Edicion() :
+    def __init__(self):
+        self.editar = Tk()
+        self.editar.title("Eliminar Curso")
+        self.editar.resizable(0,0)
+        self.editar.geometry("650x300")
+        self.editar.configure(bg="#18b9e4")
+        self.container()
+    
+    def container(self):
+        self.frame = Frame(height=400,width=600)
+        self.frame.config(bg="#00e4ce")
+        self.frame.pack(padx=25,pady=25)
+
+        textoR = Label(self.frame,bg="#42d35c" , text="Código de Curso:")
+        textoR.pack
+        textoR.place(x=20,y=45)
+        textoR.config(font=("Consolas",13))
+
+        self.ruta = Text(self.frame, height = 1, width = 25)
+        self.ruta.place(x=200,y=50)
+
+        eliminar = Button(self.frame,bg="#42d35c",text="Seleccionar",font=("Consolas",12),command=self.eliminarCurso)
+        eliminar.pack
+        eliminar.place(x=150,y=100)
+
+        regresar = Button(self.frame,bg="#447cb6",text="Regresar",font=("Consolas",12),command=self.regresar)
+        regresar.pack
+        regresar.place(x=300,y=100)
+
+        self.frame.mainloop()
+        
+    def regresar(self):
+        self.editar.destroy()
+        GestionarCurso()
+        
+    def seleccionar(self):
+        print("seleccionar")
+        seleccion = self.ruta.get("1.0","end").replace("\n","")
+        
+        contador = 0
+        
+        for curso in cursos:
+            print("curso")
+            if (seleccion == curso.getCodigo()):
+                contador = contador + 1
+                print("curso seleccionado es: ",curso.getNombre())
+        cursoAE = contador
+
 class EditarCurso():
     def __init__(self):
         self.eliminar = Tk()
@@ -607,7 +655,7 @@ class ConteoCreditos():
         self.frame.config(bg="#00e4ce")
         self.frame.pack(padx=25,pady=25)
 
-        aprobados = Label(self.frame,bg="#42d35c",text="Créditos Aprobados:",font=("Consolas",13))
+        aprobados = Label(self.frame,bg="#42d35c",text="Calificacion 1:",font=("Consolas",13))
         aprobados.pack
         aprobados.place(x=20,y=20)
 
@@ -660,14 +708,14 @@ class ConteoCreditos():
         regresar.pack
         regresar.place(x=500,y=365)
         
-        self.combo = ttk.Combobox(self.frame,values=["1","2","3","4","5","6","7","8","9","10","11","12"])
+        self.combo = ttk.Combobox(self.frame,values=["1","2","3","4","5","6","7","8","9","10"])
         self.combo.place(x=200,y=220)
         
         self.conteoO = Button(self.frame,text="Conteo",bg="#23a0b5",font=("Consolas",13),command=self.conteoObligatorios)
         self.conteoO.pack
         self.conteoO.place(x=375,y=215)
         
-        self.combo1 = ttk.Combobox(self.frame,values=["1","2","3","4","5","6","7","8","9","10","11","12"])
+        self.combo1 = ttk.Combobox(self.frame,values=["1","2","3","4","5","6","7","8","9","10"])
         self.combo1.place(x=200,y=320)
         
         self.conteoS = Button(self.frame,text="Conteo S",bg="#23a0b5",font=("Consolas",13),command=self.conteoSemestre)
