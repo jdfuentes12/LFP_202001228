@@ -138,6 +138,7 @@ class CargarArchivo():
         Menu()
     
     print("esta en el modulo analizador")
+    
     def AgregarCurso(codigo,nombre,requisito,opcional,semestre,creditos,estado):
         
         curso = Cursos(codigo,nombre,requisito,opcional,semestre,creditos,estado)
