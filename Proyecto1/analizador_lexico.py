@@ -1,12 +1,10 @@
 from texto import Texto
-from numero import Numero # Importamos la clase Numero para la creacion del objeto Numero
-from aritmeticas import Aritmeticas # Lo mismo para la clase de creacion de Operaciones
-from operador import Operador # Los operadores Mas, Menos... 
+from numero import Numero 
+from aritmeticas import Aritmeticas 
+from operador import Operador 
 from errores import Errores
 from estilo import Estilo
 from funcion import Funcion
-
-
 from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename
@@ -154,7 +152,6 @@ def t_error(t):
     errores_.append(error)
     t.lexer.skip(1)
 
-
 # Contruccion del analizador lexico
 import re
 import ply.lex as lex
@@ -166,7 +163,6 @@ lexer = lex.lex()
 
 # ANALIZADOR SINTACTICO
 # Definicion de la gramatica
-
 
 def p_init(t):
     'init : instrucciones'
@@ -186,10 +182,7 @@ def p_instruccion(t):
     '''instruccion  : INSTIPO
                     | INSTEXTO
                     | INSTFUNCION
-                    | INSTESTILO
-                    
-                    
-'''
+                    | INSTESTILO'''
     t[0] = t[1]
 
 def p_instruccionTipo(t):
@@ -304,7 +297,6 @@ def p_tipo(t):
     elif t[1] == 'TANGENTE':
         t[0] = Operador.TANGENTE
 
-
 # Aqui reconoce un error de sintaxis, pueden crear un array e irlos agregando
 # para obtenerlos después
 def p_error(t):
@@ -330,34 +322,44 @@ def analizador():
     from generador import Generador
     genAux = Generador()
     generador = genAux.getInstance()
-    f = open('compleja.txt', 'r')
     global input
     global errores_
     errores_ = []
     input = examinar
-    f.close()
     variable = parse(input)
 
     # Esta variable nos sirve para determinar si queremos el Resultado o la Expresion Regular
     # True para regresar la expresion regular de la forma (3+4)*5....
     # False para regresar el resultado de la operacion 60
-    getER = False
+    getER = True
+    getEr = False 
 
-    # En el primer for vienen las operaciones como <Tipo>, <Escribir>, <Estilo>
-    # En el segundo for vienen los nodos de <Operacion>, Texto de <Escribir>, Texto de <Estilo>
+    global operaciones
+    operaciones = []
+    
     if variable:
         for var in variable:
             if isinstance(var, list):
                 for var_ in var:
-                    print(var_.ejecutar(getER))
+                    if var_.ejecutar(getER) == var_.ejecutar(getEr):
+                        print(var_.ejecutar(getER))
+                    elif var_.ejecutar(getER) != var_.ejecutar(getEr):
+                        #print(var_.ejecutar(getER)," = ",var_.ejecutar(getEr))
+                        operacion = var_.ejecutar(getER)," = ",var_.ejecutar(getEr)
+                        operaciones.append(operacion)
             elif isinstance(var, Texto):
                 print(var.ejecutar(getER))
             elif isinstance(var, Funcion):
                 print(var.ejecutar(getER))
-
-
+    
+    for operacion in operaciones:
+        print(operacion[0],operacion[1],operacion[2])
+    
+    
     for var in errores_:
         print(var.toString())
+        
+        
 
 class Principal():
 
@@ -427,8 +429,6 @@ class Intefaz():
         barraMenu.add_cascade(label="Ayuda",menu=contenido2)
         self.ventana.config(menu=barraMenu)
         
-
-        
         self.ingreso = Text(self.ventana, height = 40, width = 143)
         self.ingreso.place(x=25,y=25)
         
@@ -455,10 +455,10 @@ class Intefaz():
         self.ventana.destroy()
 
     def manualTecnico(self):
-        pass
+        wb.open_new(r'E:\Documentos\USAC\LFP\LFP_202001228\Proyecto1\MANUEALES\Manual Técnico.pdf')
 
     def manualUsuario(self):
-        wb.open_new(r'E:\Documentos\USAC\LFP\LFP_202001228\Proyecto1\MANUALES\Manual Usuario.pdf')
+        wb.open_new(r'E:\Documentos\USAC\LFP\LFP_202001228\Proyecto1\MANUEALES\Manual Usuario.pdf')
 
     def guardarComo(self):
         file = filedialog.asksaveasfile(filetypes=[
