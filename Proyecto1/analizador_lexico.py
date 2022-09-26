@@ -12,8 +12,6 @@ from tkinter.filedialog import askopenfilename
 from tkinter import messagebox
 import webbrowser as wb
 
-
-# Aqui se declaran los nombres de los tokens
 tokens = (
     'RESTILO',
     'ROPERACIONES',
@@ -59,8 +57,6 @@ tokens = (
     'RCAFE',
 )
 
-# Aqui se dan los valores de cada token
-# En este caso decimos el valor que va a contener cada token osea, el lexema
 
 t_RESTILO = r'Estilo'
 t_RTIPO2  = r'TIPO'
@@ -102,11 +98,6 @@ t_RGRIS = r'GRIS'
 t_RCELESTE = r'CELESTE'
 t_RCAFE = r'CAFE'
 
-
-# GRAMATICAS PARA NÚMEROS
-# Pueden repasar la parte de gramáticas en la clase 4
-
-# Gramática para números con punto decimal
 def t_DECIMAL(t):
     r'\d+\.\d+'
     try:
@@ -116,7 +107,6 @@ def t_DECIMAL(t):
         t.value = 0
     return t
 
-# Gramática para números enteros
 def t_ENTERO(t):
     r'\d+'
     try:
@@ -126,7 +116,6 @@ def t_ENTERO(t):
         t.value = 0
     return t
 
-# Esta esa para poder aceptar cadenas de texto, lo vamos a usar más adelante
 def t_CADENA(t):
     r'(\".*?\")'
     t.value = t.value[1:-1] #Se remueven las comillas de la entrada
@@ -137,33 +126,21 @@ def t_CADENA(t):
     t.value = t.value.replace('\\\\','\\')
     return t
 
-# Esta función cuando lee un salto de línea lo agrega al analizador para 
-# Saber en qué linea se encuentra
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
 
-# Caracteres ignorados en este caso los espacios y las tabulaciones
 t_ignore = " \t"
 
-# Este es un error léxico, pueden irlos almacenando en un array para obtenerlos después
 def t_error(t):
     # print("Error Lexico, no se reconoce: '%s'" % t.value[0])
     error = Errores(t.value[0],'Error Lexico', find_column(input,t),t.lineno)
     errores_.append(error)
     t.lexer.skip(1)
 
-# Contruccion del analizador lexico
 import re
 import ply.lex as lex
 lexer = lex.lex()
-
-# ------ DE AQUI EN ADELANTE EMPIEZA EL ANALIZADOR SINTACTICO ------
-# Pueden guiarse con esto que les dejé, ya solo es de 
-# agregar las demás operaciones que hagan falta y agregarlas en el archivo aritmeticas.py
-
-# ANALIZADOR SINTACTICO
-# Definicion de la gramatica
 
 def p_init(t):
     'init : instrucciones'
@@ -298,12 +275,9 @@ def p_tipo(t):
     elif t[1] == 'TANGENTE':
         t[0] = Operador.TANGENTE
 
-# Aqui reconoce un error de sintaxis, pueden crear un array e irlos agregando
-# para obtenerlos después
 def p_error(t):
     print("Error de sintaxis en '%s'" % t.value," Linea:", t.lineno, " Columna:",find_column(input,t))
 
-# Esta función busca la columna en la que se encuentra el token o lexema
 def find_column(inp, tk):
     try:
         line_start = inp.rfind('\n',0,tk.lexpos) + 1
@@ -371,10 +345,13 @@ def analizador():
         
         fila = var.returFila()
         filas.append(fila)
+        
         columna = var.returColumna()
         columnas.append(columna)
+        
         tipo = var.returTipo()
         tipos.append(tipo)
+        
         lexema = var.returLexema()
         lexemas.append(lexema)
     
@@ -418,9 +395,10 @@ def erroresReporte():
         archivo.write('''</tr>''')
         contador += 1
         contador2 += 1
+    archivo.write()
     archivo.write('''</body>''')
     
-    archivo.close()
+    archivo.close('''</table>''')
 
 def operacionesReporte():
     archivo = open("Operaciones.html", "w")
