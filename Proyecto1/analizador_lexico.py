@@ -1,3 +1,4 @@
+import tkinter
 from texto import Texto
 from numero import Numero 
 from aritmeticas import Aritmeticas 
@@ -494,7 +495,7 @@ class Intefaz():
         contenido2  = Menu(barraMenu)
         contenido2.add_command(label="Manual de Usuario",command=self.manualUsuario)
         contenido2.add_command(label="Manual de Técnico",command=self.manualTecnico)
-        contenido2.add_command(label="Temas de  Ayuda")
+        contenido2.add_command(label="Temas de  Ayuda",command=self.temasAyuda)
         
         barraMenu.add_cascade(label="Ayuda",menu=contenido2)
         self.ventana.config(menu=barraMenu)
@@ -558,5 +559,72 @@ class Intefaz():
     
     def error(self):
         wb.open_new(r'E:\Documentos\USAC\LFP\LFP_202001228\Proyecto1\Errores.html')
+    
+    def temasAyuda(self):
+        self.ventana.destroy()
+        TemasAyuda()
+
+class TemasAyuda():
+    def __init__(self):
+        self.menu = Tk()
+        self.menu.title("Analizador  Lexico")
+        self.menu.resizable(0,0)
+        self.menu.geometry("450x400+500+250")
+        self.menu.configure(bg="#214457")
+        self.container()
+
+    def container(self):
+        self.frame = Frame(height=500,width=600)
+        self.frame.config(bg="#114e64")
+        self.frame.pack(padx=20,pady=20)
+
+        curso = Label(self.frame,bg="#007389" , text="Estudiante:")
+        curso.pack
+        curso.place(x=20,y=10)
+        curso.config(font=("Consolas",13))
+
+        curso = Label(self.frame,bg="#007389" , text="José Daniel Fuentes Orozco")
+        curso.pack
+        curso.place(x=50,y=50)
+        curso.config(font=("Consolas",13))
+        
+        curso = Label(self.frame,bg="#007389" , text="Curso:")
+        curso.pack
+        curso.place(x=20,y=100)
+        curso.config(font=("Consolas",13))
+
+        curso = Label(self.frame,bg="#007389" , text="Lenguajes Formales de Programación")
+        curso.pack
+        curso.place(x=50,y=150)
+        curso.config(font=("Consolas",13))
+        
+        curso = Label(self.frame,bg="#007389" , text="Sección:")
+        curso.pack
+        curso.place(x=20,y=190)
+        curso.config(font=("Consolas",13))
+
+        curso = Label(self.frame,bg="#007389" , text="B+")
+        curso.pack
+        curso.place(x=50,y=240)
+        curso.config(font=("Consolas",13))
+        
+        curso = Label(self.frame,bg="#007389" , text="Carné:")
+        curso.pack
+        curso.place(x=150,y=190)
+        curso.config(font=("Consolas",13))
+
+        curso = Label(self.frame,bg="#007389" , text="202001228")
+        curso.pack
+        curso.place(x=200,y=240)
+        curso.config(font=("Consolas",13))
+        
+        botonIniciar =  Button(self.frame,bg="#006f98",font=("Consolas",12),text="Cerra",command=self.cerrar)
+        botonIniciar.place(x=205,y=300)
+        
+        self.frame.mainloop()
+    
+    def cerrar(self):
+        self.menu.destroy()
+        Intefaz()
 
 a = Principal()
