@@ -1,3 +1,4 @@
+import re
 from expression import Expression
 
 class Funcion(Expression):
@@ -11,3 +12,6 @@ class Funcion(Expression):
     
     def ejecutar(self, getER):
         return {self.titulo, self.descripcion, self.contenido}
+    
+    def ejcutar2(self,getER):
+        return self.titulo

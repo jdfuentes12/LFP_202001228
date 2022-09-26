@@ -5,6 +5,7 @@ from operador import Operador
 from errores import Errores
 from estilo import Estilo
 from funcion import Funcion
+
 from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename
@@ -317,20 +318,21 @@ def parse(input):
     lexer.lineno = 1
     return parser.parse(input)
 
-
 def analizador():
     from generador import Generador
     genAux = Generador()
     generador = genAux.getInstance()
     global input
+    global texto
+    texto = ""
     global errores_
     errores_ = []
+    global titulo
+    titulo =  ""
+    
     input = examinar
     variable = parse(input)
 
-    # Esta variable nos sirve para determinar si queremos el Resultado o la Expresion Regular
-    # True para regresar la expresion regular de la forma (3+4)*5....
-    # False para regresar el resultado de la operacion 60
     getER = True
     getEr = False 
 
@@ -340,26 +342,117 @@ def analizador():
     if variable:
         for var in variable:
             if isinstance(var, list):
-                for var_ in var:
+                for var_ in var:  
                     if var_.ejecutar(getER) == var_.ejecutar(getEr):
-                        print(var_.ejecutar(getER))
-                    elif var_.ejecutar(getER) != var_.ejecutar(getEr):
-                        #print(var_.ejecutar(getER)," = ",var_.ejecutar(getEr))
+                        print(var_.ejecutar(getEr))
+                    if var_.ejecutar(getER) != var_.ejecutar(getEr):
                         operacion = var_.ejecutar(getER)," = ",var_.ejecutar(getEr)
                         operaciones.append(operacion)
             elif isinstance(var, Texto):
-                print(var.ejecutar(getER))
+                texto = var.ejecutar(getER) 
             elif isinstance(var, Funcion):
                 print(var.ejecutar(getER))
+                titulo = var.ejcutar2(getER)
     
     for operacion in operaciones:
         print(operacion[0],operacion[1],operacion[2])
     
+    global filas
+    filas = []
+    global columnas
+    columnas = []
+    global lexemas
+    lexemas = []
+    global tipos
+    tipos = []
     
     for var in errores_:
         print(var.toString())
         
-        
+        fila = var.returFila()
+        filas.append(fila)
+        columna = var.returColumna()
+        columnas.append(columna)
+        tipo = var.returTipo()
+        tipos.append(tipo)
+        lexema = var.returLexema()
+        lexemas.append(lexema)
+    
+    operacionesReporte()
+    erroresReporte()
+    wb.open_new(r'E:\Documentos\USAC\LFP\LFP_202001228\Proyecto1\Operaciones.html')
+
+def erroresReporte():
+    archivo = open("Errores.html", "w")
+    archivo.write('''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Errores Encontrados</title>
+    </head>''')
+    archivo.write('''<body>''')
+    archivo.write('''<h1>Reporte de errorres</h1>''')
+    archivo.write('''<br>''')
+    archivo.write('''<table border = "1">''')
+    archivo.write(''' 
+    <tr>
+    <td>No.</td>
+    <td>Lexema</td>
+    <td>Tipo</td>
+    <td>Columna</td>
+    <td>Fila</td>
+    </tr>''')
+    
+    contador = 1
+    contador2 = 0
+    for error in errores_:
+        archivo.write('''<tr>''')
+        archivo.write('''<td>'''+ str(contador) +'''</td>''')
+        archivo.write('''<td>'''+ str(lexemas[contador2]) +'''</td>''')
+        archivo.write('''<td>'''+ str(tipos[contador2]) +'''</td>''')
+        archivo.write('''<td>'''+ str(columnas[contador2]) +'''</td>''')
+        archivo.write('''<td>'''+ str(filas[contador2]) +'''</td>''')
+        archivo.write('''</tr>''')
+        contador += 1
+        contador2 += 1
+    archivo.write('''</body>''')
+    
+    archivo.close()
+
+def operacionesReporte():
+    archivo = open("Operaciones.html", "w")
+
+    archivo.write('''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Operaciones Realizadas</title>
+    </head>''')
+    archivo.write('''<body>''')
+    archivo.write('''<h1>''')
+    archivo.write(str(titulo))
+    archivo.write('''</h1>''')
+    archivo.write('''<br>''')
+    archivo.write('''<table border = "1">''')
+    archivo.write(''' <tr>
+    <td>Operacion 1</td>
+    <td>Resultado</td>
+    </tr>''')
+    
+    for operacion in operaciones:
+        archivo.write('''<tr>''')
+        archivo.write( '''<td>''' + str(operacion[0])+ '''</td>''')
+        archivo.write( '''<td>''' + str(operacion[2])+ '''</td>''')
+        archivo.write('''<tr>''')
+    archivo.write('''</table>''')
+    archivo.write('''</body>''')
+    archivo.close()
 
 class Principal():
 
@@ -398,7 +491,7 @@ class Principal():
         Intefaz()
 
 class Intefaz():
-        
+
     def __init__(self):
         self.ventana = Tk()
         self.ventana.title("Analizador léxico")
@@ -413,17 +506,16 @@ class Intefaz():
         contenido.add_command(label="Guardar",command=self.guardar)
         contenido.add_command(label="Guardar Como",command=self.guardarComo)
         contenido.add_command(label="Analizar",command=self.analisis)
-        contenido.add_command(label="Errores")
+        contenido.add_command(label="Errores",command=self.error)
         contenido.add_separator()
         contenido.add_command(label="Salir",command=self.salir)
         barraMenu.add_cascade(label="Archivo",menu=contenido)
         self.ventana.config(menu=barraMenu)
         
         #SEGUNDA BARRA
-        
         contenido2  = Menu(barraMenu)
         contenido2.add_command(label="Manual de Usuario",command=self.manualUsuario)
-        contenido2.add_command(label="Manual de Técnico")
+        contenido2.add_command(label="Manual de Técnico",command=self.manualTecnico)
         contenido2.add_command(label="Temas de  Ayuda")
         
         barraMenu.add_cascade(label="Ayuda",menu=contenido2)
@@ -485,5 +577,8 @@ class Intefaz():
         global examinar
         examinar = self.ingreso.get(1.0,END)
         analizador()
+    
+    def error(self):
+        wb.open_new(r'E:\Documentos\USAC\LFP\LFP_202001228\Proyecto1\Errores.html')
 
 a = Principal()

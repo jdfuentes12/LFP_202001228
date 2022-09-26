@@ -1,3 +1,1 @@
-colores = ['azul', 'blanco', 'negro']
-for color in colores:
-    print(color)
+from analizador_lexico import errores_
