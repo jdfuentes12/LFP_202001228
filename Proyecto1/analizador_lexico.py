@@ -396,10 +396,7 @@ def erroresReporte():
         archivo.write('''</tr>''')
         contador += 1
         contador2 += 1
-    archivo.write()
     archivo.write('''</body>''')
-    
-    archivo.close('''</table>''')
 
 def operacionesReporte():
     archivo = open("Operaciones.html", "w")
@@ -428,8 +425,8 @@ def operacionesReporte():
         archivo.write('''<tr>''')
         archivo.write( '''<td>''' + str(operacion[0])+ '''</td>''')
         archivo.write( '''<td>''' + str(operacion[2])+ '''</td>''')
-        archivo.write('''<tr>''')
-    archivo.write('''</table>''')
+        archivo.write('''<tr>\n''')
+    archivo.write('''</table>\n''')
     archivo.write('''</body>''')
     archivo.close()
 
