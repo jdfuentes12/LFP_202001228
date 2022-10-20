@@ -428,6 +428,7 @@ def operacionesReporte():
         archivo.write('''<tr>\n''')
     archivo.write('''</table>\n''')
     archivo.write('''</body>''')
+    archivo.write('''</html>''')
     archivo.close()
 
 class Principal():
