@@ -1,4 +1,4 @@
-<!--Controles
+<!--Controles 
     Contenedor contlogin;
     Contenedor contFondo;
     Boton cmdIngresar;
@@ -11,12 +11,12 @@
     Contenedor ContBody;
 Controles -->
 <!--propiedades 
-    /*#$inicio de contlogin*/
+    //#$inicio de contlogin
     contlogin.setAncho(190);
     contlogin.setAlto(150);
     contlogin.setColorFondo(47,79,79);
     //#$fin de contlogin
-    /#$inicio de contFondo
+    //#$inicio de contFondo
     contFondo.setAncho(800);
     contFondo.setAlto(100);
     contFondo.setColorFondo(64,64,64);

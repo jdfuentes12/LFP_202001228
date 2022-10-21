@@ -1,21 +1,31 @@
 from array import array
+from http.cookiejar import LWPCookieJar
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter import messagebox
 from tkinter import filedialog
+
+global check
+global radiobutton
 global contenedor
+global areaTexto
 global boton
 global clave
 global etiqueta
 global texto
+
+global contenido
+global propiedades
+
+areaTexto = []
+radiobutton = []
+check = []
 contenedor = []
 boton = []
 clave = []
 etiqueta = []
 texto = []
-global contenido
 contenido = 0
-global propiedades
 propiedades = []
 
 
@@ -122,6 +132,8 @@ class Atuomatico:
         
     def analizador(self):
         archivo = open("entrada.gpw","r")
+        self.htmlEncabezado()
+        self.css = open('estilo.css','w')
         contenido = archivo.readlines()
         lexema = ""
         for linea in contenido:
@@ -129,8 +141,18 @@ class Atuomatico:
             self.columna = 0
             validar = 0
             opcion = 0
+            condicion = 0
+            tmp = ''
+            validar2 = False
+            validar3 = False
+            color = []
             for caracter in linea:
+                #self.comentario(linea)
                 self.columna += 1
+                
+                if self.comentario(linea) == True:
+                    break
+
                 if caracter == "\t":
                     continue
                 
@@ -160,11 +182,10 @@ class Atuomatico:
                             if i == 'Controles':
                                 self.estado = 4
                                 opcion = 0
-                                print(self.estado)
                             elif i == 'propiedades':
-                                self.estado = 5
+                                self.estado = 18
                             elif i == 'Colocacion':
-                                self.estado = 6
+                                self.estado = None
                 
                 if self.estado == 4:
                     if caracter.isalpha() or caracter.isnumeric():
@@ -192,7 +213,19 @@ class Atuomatico:
                             opcion = 0
                             lexema = ""
                         if lexema == 'Controles':
-                            self.estado = 10
+                            self.estado = 13
+                            opcion = 0
+                            lexema = ""
+                        if lexema == 'Check':
+                            self.estado = None
+                            opcion = 0
+                            lexema = ""
+                        if lexema == 'RadioBoton':
+                            self.estado = None
+                            opcion = 0
+                            lexema = ""
+                        if lexema == 'AreaTexto':
+                            self.estado = None
                             opcion = 0
                             lexema = ""
                 
@@ -247,16 +280,144 @@ class Atuomatico:
                         self.estado = 4
                 
                 if self.estado == 10:
-                    if caracter == "-":
-                        self.estado = 10
-                        validar += 1
-                        if validar == 2:
-                            self.estado = 11
+                    pass
                 
                 if self.estado == 11:
-                    if caracter == ">":
-                        self.estado = 1
+                    pass
                 
+                if self.estado == 12:
+                    pass
+                
+                if self.estado == 13:
+                    if caracter == "-":
+                        self.estado = 13
+                        validar += 1
+                        if validar == 2:
+                            self.estado = 14
+                
+                if self.estado == 14:
+                    if caracter == ">":
+                        self.estado = 15
+                
+                if self.estado == 15:
+                    if caracter == "<":
+                        self.estado = 16
+                
+                if self.estado == 16:
+                    if caracter == "!":
+                        self.estado = 17
+                
+                if self.estado == 17:
+                    if caracter == "-":
+                        self.estado = 17
+                        validar += 1
+                        if validar == 2:
+                            self.estado = 3
+                
+                if self.estado == 18:
+                    
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
+                        for i in contenedor:
+                            if lexema == i:
+                                self.estado = 19
+                                opcion = 0
+                                lexema = ""
+                                tmp = i
+                        
+                #contenedor
+                if self.estado == 19:
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
+                        if lexema  == 'setAncho':
+                            validar = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar == True:
+                            if lexema != '':
+                                self.setAncho(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setAlto':
+                            validar2 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar2 == True:
+                            if lexema != '':
+                                self.setAlto(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setColorFondo':
+                            validar3 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar3 == True:
+                            if lexema != '':
+                                color.append(lexema)
+                                lexema = ''
+                                if len(color) == 3:
+                                    self.setColorFondo(tmp,color)
+                                    lexema = ''
+                                    self.estado = 18
+                
+            
+    def setAncho(self,control,tamaño):
+        
+        self.css.write(control + '{\n')
+        self.css.write('width: ' + tamaño + 'px;\n')
+        self.css.write('}\n')
+    
+    def setAlto(self,control,tamaño):
+        self.css.write(control + '{\n')
+        self.css.write('height: ' + tamaño + 'px;\n')
+        self.css.write('}\n')
+    
+    def setColorFondo(self,control,color):
+        self.css.write(control + '{\n')
+        self.css.write('background-color: rgb(' )
+        
+        for i in color:
+            self.css.write(i + ',')
+        self.css.write(');\n')
+        
+        self.css.write('}\n')
+    
+    def comentario(self,linea):
+
+        cadena = linea.replace(" ","")
+        contador = len(cadena)
+        
+        if cadena[0] == '/' and cadena[1] == '/':
+            return True
+        if cadena[0] == '/' and cadena[1] == '*' and cadena[contador-3] == '*' and cadena[contador-2] == '/':
+            return True
+        else:
+            return False
+
+    def htmlEncabezado(self):
+        archivo = open('index.html','w')
+        archivo.write('''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado</title>
+    <link rel="stylesheet" type="estilo.css" href="URL">
+</head>
+<body>
+''')
+
 a = Atuomatico()
 a.analizador() 
 
