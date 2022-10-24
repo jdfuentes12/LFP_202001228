@@ -1,4 +1,4 @@
-<!--Controles 
+<!--Controles
     Contenedor contlogin;
     Contenedor contFondo;
     Boton cmdIngresar;
@@ -30,7 +30,7 @@ Controles -->
     //#$fin de pswClave
     //#$inicio de etiqueta passw
     passw.setAncho(53);
-    passw.setAlto(13 );
+    passw.setAlto(13);
     passw.setColorLetra(128,128,128);
     passw.setTexto("Password");
     //#$fin de passw
@@ -40,9 +40,6 @@ Controles -->
     Nombre.setColorLetra(128,128,128);
     Nombre.setTexto("Nombre");
     //#$fin de Nombre
-    //#$inicio de JTextField0
-    JTextField0.setTexto("");
-    //#$fin de JTextField0
     //#$inicio de contlogo2
     contlogo2.setAncho(150);
     contlogo2.setAlto( 50);

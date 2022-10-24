@@ -1,12 +1,13 @@
 from array import array
 from http.cookiejar import LWPCookieJar
+from msilib.schema import _Validation_records
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter import messagebox
 from tkinter import filedialog
 
 global check
-global radiobutton
+global radioButton
 global contenedor
 global areaTexto
 global boton
@@ -18,7 +19,7 @@ global contenido
 global propiedades
 
 areaTexto = []
-radiobutton = []
+radioButton = []
 check = []
 contenedor = []
 boton = []
@@ -143,8 +144,11 @@ class Atuomatico:
             opcion = 0
             condicion = 0
             tmp = ''
+            validar1 = False
             validar2 = False
             validar3 = False
+            validar4 = False
+            validar5 = False
             color = []
             for caracter in linea:
                 #self.comentario(linea)
@@ -217,15 +221,15 @@ class Atuomatico:
                             opcion = 0
                             lexema = ""
                         if lexema == 'Check':
-                            self.estado = None
+                            self.estado = 10
                             opcion = 0
                             lexema = ""
                         if lexema == 'RadioBoton':
-                            self.estado = None
+                            self.estado = 11
                             opcion = 0
                             lexema = ""
                         if lexema == 'AreaTexto':
-                            self.estado = None
+                            self.estado = 12
                             opcion = 0
                             lexema = ""
                 
@@ -280,13 +284,34 @@ class Atuomatico:
                         self.estado = 4
                 
                 if self.estado == 10:
-                    pass
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
+                        check.append(lexema)
+                        lexema = ""
+                        opcion = 0
+                        self.estado = 4
                 
                 if self.estado == 11:
-                    pass
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
+                        radioButton.append(lexema)
+                        lexema = ""
+                        opcion = 0
+                        self.estado = 4
                 
                 if self.estado == 12:
-                    pass
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
+                        areaTexto.append(lexema)
+                        lexema = ""
+                        opcion = 0
+                        self.estado = 4
                 
                 if self.estado == 13:
                     if caracter == "-":
@@ -320,6 +345,7 @@ class Atuomatico:
                         lexema += caracter
                         opcion = 1
                     elif opcion == 1:
+                        
                         for i in contenedor:
                             if lexema == i:
                                 self.estado = 19
@@ -327,6 +353,55 @@ class Atuomatico:
                                 lexema = ""
                                 tmp = i
                         
+                        for i in boton:
+                            if lexema == i:
+                                self.estado = 20
+                                opcion = 0
+                                lexema = ""
+                                tmp = i
+                        
+                        for i in clave:
+                            if lexema == i:
+                                self.estado = 21
+                                opcion = 0
+                                lexema = ""
+                                tmp = i
+                        
+                        for i in texto:
+                            if lexema == i:
+                                self.estado = 22
+                                opcion = 0
+                                lexema = ""
+                                tmp = i
+                        
+                        for i in etiqueta:
+                            if lexema == i:
+                                self.estado = 23
+                                opcion = 0
+                                lexema = ""
+                                tmp = i
+                        
+                        for i in check:
+                            if lexema == i:
+                                self.estado = 24
+                                opcion = 0
+                                lexema = ""
+                                tmp = i
+                        
+                        for i in radioButton:
+                            if lexema == i:
+                                self.estado = 25
+                                opcion = 0
+                                lexema = ""
+                                tmp = i
+                        
+                        for i in areaTexto:
+                            if lexema == i:
+                                self.estado = 26
+                                opcion = 0
+                                lexema = ""
+                                tmp = i
+                
                 #contenedor
                 if self.estado == 19:
                     if caracter.isalpha() or caracter.isnumeric():
@@ -334,11 +409,11 @@ class Atuomatico:
                         opcion = 1
                     elif opcion == 1:
                         if lexema  == 'setAncho':
-                            validar = True
+                            validar1 = True
                             lexema = ''
                             opcion = 0
                         
-                        if validar == True:
+                        if validar1 == True:
                             if lexema != '':
                                 self.setAncho(tmp,lexema)
                                 lexema = ''
@@ -368,10 +443,251 @@ class Atuomatico:
                                     self.setColorFondo(tmp,color)
                                     lexema = ''
                                     self.estado = 18
-                
-            
+
+                        if lexema == 'add':
+                            validar5 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar5 == True:
+                            if lexema != '':
+                                self.add(tmp,self.tmp)
+                                lexema = ''
+                                self.estado = 18
+                #boton
+                if self.estado == 20:
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
+                        if lexema  == 'setAncho':
+                            validar1 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar1 == True:
+                            if lexema != '':
+                                self.setAncho(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setAlto':
+                            validar2 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar2 == True:
+                            if lexema != '':
+                                self.setAlto(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setColorFondo':
+                            validar3 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar3 == True:
+                            if lexema != '':
+                                color.append(lexema)
+                                lexema = ''
+                                if len(color) == 3:
+                                    self.setColorFondo(tmp,color)
+                                    lexema = ''
+                                    self.estado = 18
+                        
+                        if lexema == 'setTexto':
+                            validar4 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar4 == True:
+                            if lexema != '':
+                                self.tmp = self.setTexto(tmp,lexema)
+                                print(self.tmp)
+                                lexema = ''
+                                self.estado = 18    
+                #clave
+                if self.estado == 21:
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    if caracter == '"':
+                        contador = len(linea)
+                        if linea[contador-4]== '"':
+                            self.estado = 18
+                            break
+                    elif opcion == 1:
+                        if lexema  == 'setAncho':
+                            validar1 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar1 == True:
+                            if lexema != '':
+                                self.setAncho(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setAlto':
+                            validar2 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar2 == True:
+                            if lexema != '':
+                                self.setAlto(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setColorFondo':
+                            validar3 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar3 == True:
+                            if lexema != '':
+                                color.append(lexema)
+                                lexema = ''
+                                if len(color) == 3:
+                                    self.setColorFondo(tmp,color)
+                                    lexema = ''
+                                    self.estado = 18
+                        
+                        if lexema == 'setTexto':
+                            validar4 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar4 == True:
+                            if lexema != '':
+                                self.tmp = self.setTexto(tmp,lexema)
+                                print(self.tmp)
+                                lexema = ''
+                                self.estado = 18
+                #texto
+                if self.estado == 22:
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    if opcion == 1:
+                        if lexema  == 'setAncho':
+                            validar1 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar1 == True:
+                            if lexema != '':
+                                self.setAncho(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+
+                        
+                        if lexema == 'setAlto':
+                            validar2 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar2 == True:
+                            if lexema != '':
+                                self.setAlto(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setColorFondo':
+                            validar3 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar3 == True:
+                            if lexema != '':
+                                color.append(lexema)
+                                lexema = ''
+                                if len(color) == 3:
+                                    self.setColorFondo(tmp,color)
+                                    lexema = ''
+                                    self.estado = 18
+                        
+                        if lexema == 'setTexto':
+                            validar4 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar4 == True:
+                            if lexema != '':
+                                self.tmp = self.setTexto(tmp,lexema)
+                                print(self.tmp)
+                                lexema = ''
+                                self.estado = 18
+                #etiqueta
+                if self.estado == 23:
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
+                        if lexema  == 'setAncho':
+                            validar1 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar1 == True:
+                            if lexema != '':
+                                self.setAncho(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setAlto':
+                            validar2 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar2 == True:
+                            if lexema != '':
+                                self.setAlto(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setColorFondo':
+                            validar3 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar3 == True:
+                            if lexema != '':
+                                color.append(lexema)
+                                lexema = ''
+                                if len(color) == 3:
+                                    self.setColorFondo(tmp,color)
+                                    lexema = ''
+                                    self.estado = 18
+
+                        if lexema == 'setTexto':
+                            validar4 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar4 == True:
+                            if lexema != '':
+                                self.tmp = self.setTexto(tmp,lexema)
+                                print(self.tmp)
+                                lexema = ''
+                                self.estado = 18
+
+                        if lexema == 'setColorLetra':
+                            validar5 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar5 == True:
+                            if lexema != '':
+                                color.append(lexema)
+                                lexema = ''
+                                if len(color) == 3:
+                                    self.setColorLetra(tmp,color)
+                                    lexema = ''
+                                    self.estado = 18
+                        
     def setAncho(self,control,tamaño):
-        
         self.css.write(control + '{\n')
         self.css.write('width: ' + tamaño + 'px;\n')
         self.css.write('}\n')
@@ -391,6 +707,26 @@ class Atuomatico:
         
         self.css.write('}\n')
     
+    def setTexto(self,control,texto):
+        redactar = '''<input type="submit" id="'''+control+'''" value="'''+ texto +'''" style="text-align: Alineacion"/>'''
+        return redactar
+    
+    def setColorLetra(self,control,color):
+        self.css.write(control + '{\n')
+        self.css.write('color: rgb(' )
+        
+        for i in color:
+            self.css.write(i + ',')
+        self.css.write(');\n')
+        
+        self.css.write('}\n')
+    
+    def add(self, div, contenido):
+        self.html.write(
+            '''<div id="''' + div + '''">\n'''
+            '\t' +  contenido + '\n')
+        self.tmp = ''
+    
     def comentario(self,linea):
 
         cadena = linea.replace(" ","")
@@ -404,9 +740,9 @@ class Atuomatico:
             return False
 
     def htmlEncabezado(self):
-        archivo = open('index.html','w')
-        archivo.write('''
-<!DOCTYPE html>
+        self.html = open('index.html','w')
+        self.html.write(
+'''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
