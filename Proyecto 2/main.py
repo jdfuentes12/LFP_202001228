@@ -132,17 +132,18 @@ class Atuomatico:
         self.estado = 0
         
     def analizador(self):
-        archivo = open("entrada.gpw","r")
+        archivo = open("entrada.gpw","r",encoding="utf-8")
         self.htmlEncabezado()
         self.css = open('estilo.css','w')
         contenido = archivo.readlines()
         lexema = ""
+        tmp2 = ''
+        tmp3 = ''
         for linea in contenido:
             self.fila += 1
             self.columna = 0
             validar = 0
             opcion = 0
-            condicion = 0
             tmp = ''
             validar1 = False
             validar2 = False
@@ -345,7 +346,7 @@ class Atuomatico:
                         lexema += caracter
                         opcion = 1
                     elif opcion == 1:
-                        
+                        #print('propiedades')
                         for i in contenedor:
                             if lexema == i:
                                 self.estado = 19
@@ -402,7 +403,7 @@ class Atuomatico:
                                 lexema = ""
                                 tmp = i
                 
-                #contenedor
+                #contenedor -> add por agregar :b
                 if self.estado == 19:
                     if caracter.isalpha() or caracter.isnumeric():
                         lexema += caracter
@@ -454,7 +455,8 @@ class Atuomatico:
                                 self.add(tmp,self.tmp)
                                 lexema = ''
                                 self.estado = 18
-                #boton
+                
+                #boton  -> solo falta el add
                 if self.estado == 20:
                     if caracter.isalpha() or caracter.isnumeric():
                         lexema += caracter
@@ -504,122 +506,75 @@ class Atuomatico:
                         if validar4 == True:
                             if lexema != '':
                                 self.tmp = self.setTexto(tmp,lexema)
-                                print(self.tmp)
                                 lexema = ''
-                                self.estado = 18    
-                #clave
+                                self.estado = 18
+                
+                #clave -> solo falta el add
                 if self.estado == 21:
                     if caracter.isalpha() or caracter.isnumeric():
                         lexema += caracter
                         opcion = 1
-                    if caracter == '"':
+                    elif caracter == '"':
                         contador = len(linea)
-                        if linea[contador-4]== '"':
+                        if linea[contador-4]== '"' and linea[contador-5]== '"' :
                             self.estado = 18
                             break
                     elif opcion == 1:
-                        if lexema  == 'setAncho':
+                        
+                        if lexema == 'setTexto':
                             validar1 = True
                             lexema = ''
                             opcion = 0
                         
                         if validar1 == True:
                             if lexema != '':
-                                self.setAncho(tmp,lexema)
+                                tmp2 = lexema
                                 lexema = ''
                                 self.estado = 18
-                        
-                        if lexema == 'setAlto':
+
+                        if lexema == 'setAlineacion':
                             validar2 = True
                             lexema = ''
                             opcion = 0
-                        
+                            
                         if validar2 == True:
                             if lexema != '':
-                                self.setAlto(tmp,lexema)
+                                self.setAlineacionTexto(tmp,tmp2,lexema)
+                                tmp2 = ''
                                 lexema = ''
                                 self.estado = 18
-                        
-                        if lexema == 'setColorFondo':
-                            validar3 = True
-                            lexema = ''
-                            opcion = 0
-                        
-                        if validar3 == True:
-                            if lexema != '':
-                                color.append(lexema)
-                                lexema = ''
-                                if len(color) == 3:
-                                    self.setColorFondo(tmp,color)
-                                    lexema = ''
-                                    self.estado = 18
-                        
-                        if lexema == 'setTexto':
-                            validar4 = True
-                            lexema = ''
-                            opcion = 0
-                        
-                        if validar4 == True:
-                            if lexema != '':
-                                self.tmp = self.setTexto(tmp,lexema)
-                                print(self.tmp)
-                                lexema = ''
-                                self.estado = 18
-                #texto
+                
+                #texto -> solo falta el add
                 if self.estado == 22:
                     if caracter.isalpha() or caracter.isnumeric():
                         lexema += caracter
                         opcion = 1
-                    if opcion == 1:
-                        if lexema  == 'setAncho':
+                    elif opcion == 1:
+                        
+                        if lexema == 'setTexto':
                             validar1 = True
                             lexema = ''
                             opcion = 0
                         
                         if validar1 == True:
                             if lexema != '':
-                                self.setAncho(tmp,lexema)
+                                tmp2 = lexema
                                 lexema = ''
                                 self.estado = 18
 
-                        
-                        if lexema == 'setAlto':
+                        if lexema == 'setAlineacion':
                             validar2 = True
                             lexema = ''
                             opcion = 0
-                        
+                            
                         if validar2 == True:
                             if lexema != '':
-                                self.setAlto(tmp,lexema)
+                                self.setAlineacionContraseña(tmp,tmp2,lexema)
+                                tmp2 = ''
                                 lexema = ''
                                 self.estado = 18
-                        
-                        if lexema == 'setColorFondo':
-                            validar3 = True
-                            lexema = ''
-                            opcion = 0
-                        
-                        if validar3 == True:
-                            if lexema != '':
-                                color.append(lexema)
-                                lexema = ''
-                                if len(color) == 3:
-                                    self.setColorFondo(tmp,color)
-                                    lexema = ''
-                                    self.estado = 18
-                        
-                        if lexema == 'setTexto':
-                            validar4 = True
-                            lexema = ''
-                            opcion = 0
-                        
-                        if validar4 == True:
-                            if lexema != '':
-                                self.tmp = self.setTexto(tmp,lexema)
-                                print(self.tmp)
-                                lexema = ''
-                                self.estado = 18
-                #etiqueta
+                
+                #etiqueta -> solo falta el add
                 if self.estado == 23:
                     if caracter.isalpha() or caracter.isnumeric():
                         lexema += caracter
@@ -647,38 +602,23 @@ class Atuomatico:
                                 lexema = ''
                                 self.estado = 18
                         
-                        if lexema == 'setColorFondo':
+                        if lexema == 'setTexto':
                             validar3 = True
                             lexema = ''
                             opcion = 0
                         
                         if validar3 == True:
                             if lexema != '':
-                                color.append(lexema)
+                                self.tmp = self.setTexto(tmp,lexema)
                                 lexema = ''
-                                if len(color) == 3:
-                                    self.setColorFondo(tmp,color)
-                                    lexema = ''
-                                    self.estado = 18
+                                self.estado = 18
 
-                        if lexema == 'setTexto':
+                        if lexema == 'setColorLetra':
                             validar4 = True
                             lexema = ''
                             opcion = 0
                         
                         if validar4 == True:
-                            if lexema != '':
-                                self.tmp = self.setTexto(tmp,lexema)
-                                print(self.tmp)
-                                lexema = ''
-                                self.estado = 18
-
-                        if lexema == 'setColorLetra':
-                            validar5 = True
-                            lexema = ''
-                            opcion = 0
-                        
-                        if validar5 == True:
                             if lexema != '':
                                 color.append(lexema)
                                 lexema = ''
@@ -686,17 +626,117 @@ class Atuomatico:
                                     self.setColorLetra(tmp,color)
                                     lexema = ''
                                     self.estado = 18
+                
+                #check -> solo falta el add
+                if self.estado == 24:
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
                         
+                        if lexema == 'setMarcada':
+                            validar1 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar1 == True:
+                            if lexema != '':
+                                tmp2 = lexema
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setTexto':
+                            validar2 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar2 == True:
+                            if lexema != '':
+                                self.tmp = self.setMarcada(tmp,tmp2,lexema)
+                                lexema = ''
+                                self.estado = 18
+                
+                #radioButton -> solo falta el add 
+                if self.estado == 25:
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
+                        
+                        if lexema  == 'setMarcada':
+                            validar1 = True
+                            lexema = ''
+                            opcion = 0
+                            
+                        if validar1 == True:
+                            if lexema != '':
+                                tmp2 = lexema
+                                lexema = ''
+                                self.estado = 18
+                                
+                        if lexema == 'setGrupo':
+                            validar2 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar2 == True:
+                            if lexema != '':
+                                tmp3 = lexema
+                                lexema = ''
+                                self.estado = 18
+                        
+                        if lexema == 'setTexto':
+                            validar3 = True
+                            lexema = ''
+                            opcion = 0
+                            
+                        if validar3 == True:
+                            if lexema != '':
+                                self.radioButton(tmp,tmp3,tmp2,lexema)
+                                lexema = ''
+                                self.estado = 18
+                                tmp2 = ''
+                                tmp3 = ''
+                
+                #areaTexto -> solo falta el add
+                if self.estado == 26:
+                    if caracter.isalpha() or caracter.isnumeric():
+                        lexema += caracter
+                        opcion = 1
+                    elif opcion == 1:
+                        if lexema == 'setTexto':
+                            validar1 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar1 == True:
+                            pass
+
+    def textoBotton(self,id,texto):
+        redactar = '''<input type="submit" id="'''+id+'''" value="'''+texto+'''" style="text-align: Alineacion"/> '''
+
+    def radioButton(self,id,nombre,estado,texto):
+        redactar = ''' <input type="radio" id="''' + id + '''" name="''' + nombre + '''" checked="'''+estado+'''" value="email">\n
+        <label for="''' + id + '''">''' + texto + '''</label> '''
+        print(redactar)
+
+    def setMarcada(self,id, valor,texto):
+        redactar  = '''<label><input type="checkbox" id="'''+id+'''" value="second_checkbox" checked="'''+valor+'''" >'''+texto+'''</label> \n'''
+        self.html.write(redactar)
+
+    def setTextoArea(self,id, texto):
+        redactar = ''' <TExtarea id="''' + id + '''">''' + texto + '''</TExtarea> '''
+
     def setAncho(self,control,tamaño):
         self.css.write(control + '{\n')
         self.css.write('width: ' + tamaño + 'px;\n')
         self.css.write('}\n')
-    
+
     def setAlto(self,control,tamaño):
         self.css.write(control + '{\n')
         self.css.write('height: ' + tamaño + 'px;\n')
         self.css.write('}\n')
-    
+
     def setColorFondo(self,control,color):
         self.css.write(control + '{\n')
         self.css.write('background-color: rgb(' )
@@ -706,11 +746,11 @@ class Atuomatico:
         self.css.write(');\n')
         
         self.css.write('}\n')
-    
+
     def setTexto(self,control,texto):
-        redactar = '''<input type="submit" id="'''+control+'''" value="'''+ texto +'''" style="text-align: Alineacion"/>'''
+        redactar = '''<label id="''' + control + '''">''' + texto + '''</label>'''
         return redactar
-    
+
     def setColorLetra(self,control,color):
         self.css.write(control + '{\n')
         self.css.write('color: rgb(' )
@@ -720,13 +760,13 @@ class Atuomatico:
         self.css.write(');\n')
         
         self.css.write('}\n')
-    
+
     def add(self, div, contenido):
         self.html.write(
             '''<div id="''' + div + '''">\n'''
             '\t' +  contenido + '\n')
         self.tmp = ''
-    
+
     def comentario(self,linea):
 
         cadena = linea.replace(" ","")
@@ -754,7 +794,15 @@ class Atuomatico:
 <body>
 ''')
 
+    def setAlineacionContraseña(self,control, texto, alineacion):
+        redactar = '''<input type = "password" id="''' + control + '''"  value="''' + texto +'''" style="text-align: '''+ alineacion +'''" />'''
+        print(redactar)
+
+    def setAlineacionTexto(self,id,texto,alineacion):
+        redactar = '''<input type = "text" id="''' + id + '''"  value="''' + texto +'''" style="text-align: '''+ alineacion +'''" />'''
+        print(redactar)
+
 a = Atuomatico()
 a.analizador() 
 
-#b = Interfaz()
+#b = Interfaz()                 

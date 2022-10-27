@@ -1,63 +1,72 @@
-contlogin{
-width: 190px;
-}
-contlogin{
-height: 150px;
-}
-contlogin{
-background-color: rgb(47,79,79,);
-}
-contFondo{
+contenedor1{
 width: 800px;
 }
-contFondo{
-height: 100px;
+contenedor1{
+height: 500px;
 }
-contFondo{
-background-color: rgb(64,64,64,);
+contenedor1{
+background-color: rgb(241,205,0,);
 }
-passw{
-width: 53px;
+contenedor2{
+width: 400px;
 }
-passw{
-height: 13px;
+contenedor2{
+height: 350px;
 }
-passw{
-color: rgb(128,128,128,);
+contenedor2{
+background-color: rgb(0,213,241,);
 }
-Nombre{
-width: 44px;
+contenedor3{
+width: 250px;
 }
-Nombre{
-height: 13px;
+contenedor3{
+height: 350px;
 }
-Nombre{
-color: rgb(128,128,128,);
+contenedor3{
+background-color: rgb(241,0,221,);
 }
-contlogo2{
-width: 150px;
+etiqueta1{
+width: 200px;
 }
-contlogo2{
-height: 50px;
+etiqueta1{
+height: 10px;
 }
-contlogo2{
-background-color: rgb(0,128,128,);
+etiqueta1{
+color: rgb(17,0,255,);
 }
-ContLogo1{
-width: 50px;
+etiqueta2{
+width: 200px;
 }
-ContLogo1{
-height: 50px;
+etiqueta2{
+height: 10px;
 }
-ContLogo1{
-background-color: rgb(64,64,64,);
+etiqueta2{
+color: rgb(17,0,255,);
 }
-ContBody{
-width: 800px;
+etiqueta3{
+width: 200px;
 }
-ContBody{
-height: 300px;
+etiqueta3{
+height: 10px;
 }
-ContBody{
-background-color: rgb(64,224,208,);
+etiqueta3{
+color: rgb(17,0,255,);
+}
+etiqueta4{
+width: 200px;
+}
+etiqueta4{
+height: 10px;
+}
+etiqueta4{
+color: rgb(17,0,255,);
+}
+etiqueta5{
+width: 200px;
+}
+etiqueta5{
+height: 10px;
+}
+etiqueta5{
+color: rgb(17,0,255,);
 }
