@@ -136,10 +136,11 @@ class Atuomatico:
         self.htmlEncabezado()
         self.css = open('estilo.css','w')
         contenido = archivo.readlines()
-        lexema = ""
+        
         tmp2 = ''
         tmp3 = ''
         for linea in contenido:
+            lexema = ""
             self.fila += 1
             self.columna = 0
             validar = 0
@@ -402,6 +403,9 @@ class Atuomatico:
                                 opcion = 0
                                 lexema = ""
                                 tmp = i
+
+                        if lexema == 'propiedades':
+                            self.estado = 2
                 
                 #contenedor -> add por agregar :b
                 if self.estado == 19:
@@ -458,7 +462,7 @@ class Atuomatico:
                 
                 #boton  -> solo falta el add
                 if self.estado == 20:
-                    if caracter.isalpha() or caracter.isnumeric():
+                    if caracter.isalpha() or caracter.isnumeric() or caracter == " ":
                         lexema += caracter
                         opcion = 1
                     elif opcion == 1:
@@ -505,7 +509,7 @@ class Atuomatico:
                         
                         if validar4 == True:
                             if lexema != '':
-                                self.tmp = self.setTexto(tmp,lexema)
+                                self.tmp = self.setTextoBotton(tmp,lexema)
                                 lexema = ''
                                 self.estado = 18
                 
@@ -700,7 +704,7 @@ class Atuomatico:
                 
                 #areaTexto -> solo falta el add
                 if self.estado == 26:
-                    if caracter.isalpha() or caracter.isnumeric():
+                    if caracter.isalpha() or caracter.isnumeric() or caracter == ' ':
                         lexema += caracter
                         opcion = 1
                     elif opcion == 1:
@@ -710,22 +714,28 @@ class Atuomatico:
                             opcion = 0
                         
                         if validar1 == True:
-                            pass
+                            if lexema != '':
+                                self.tmp = self.setTextoArea(tmp,lexema)
+                                lexema = ''
+                                self.estado = 18
 
+                if self.estado == 27:
+                    pass
     def textoBotton(self,id,texto):
         redactar = '''<input type="submit" id="'''+id+'''" value="'''+texto+'''" style="text-align: Alineacion"/> '''
 
     def radioButton(self,id,nombre,estado,texto):
-        redactar = ''' <input type="radio" id="''' + id + '''" name="''' + nombre + '''" checked="'''+estado+'''" value="email">\n
+        redactar = '''<input type="radio" id="''' + id + '''" name="''' + nombre + '''" checked="'''+estado+'''" value="email">
         <label for="''' + id + '''">''' + texto + '''</label> '''
         print(redactar)
 
     def setMarcada(self,id, valor,texto):
         redactar  = '''<label><input type="checkbox" id="'''+id+'''" value="second_checkbox" checked="'''+valor+'''" >'''+texto+'''</label> \n'''
-        self.html.write(redactar)
+        print(redactar)
 
     def setTextoArea(self,id, texto):
         redactar = ''' <TExtarea id="''' + id + '''">''' + texto + '''</TExtarea> '''
+        print(redactar)
 
     def setAncho(self,control,tamaño):
         self.css.write(control + '{\n')
@@ -749,8 +759,12 @@ class Atuomatico:
 
     def setTexto(self,control,texto):
         redactar = '''<label id="''' + control + '''">''' + texto + '''</label>'''
-        return redactar
+        print(redactar)
 
+    def setTextoBotton(self,id,texto):
+        redactar = '''<input type="button" id="'''+id+'''" value="'''+texto+'''">'''
+        print(redactar)
+    
     def setColorLetra(self,control,color):
         self.css.write(control + '{\n')
         self.css.write('color: rgb(' )
