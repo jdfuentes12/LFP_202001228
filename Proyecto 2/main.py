@@ -3,7 +3,6 @@ from tkinter import *
 from tkinter.filedialog import askopenfilename
 from tkinter import messagebox
 from tkinter import filedialog
-
 from Analizador import Automata
 
 analizar_archivo = Automata()
@@ -60,7 +59,7 @@ class Interfaz:
         print(contenido + "\n")
         
         analizar_archivo.analizador()
-        
+
     def nuevo(self):
         x = ""
         Tk().withdraw()

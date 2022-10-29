@@ -30,9 +30,11 @@ class Automata:
 
     def analizador(self):
         archivo = open("entrada.txt","r",encoding="utf-8")
+        contenido = archivo.readlines()
+        archivo.close()
         self.htmlEncabezado()
         self.css = open('estilo.css','w')
-        contenido = archivo.readlines()
+        
         tmp2 = ''
         tmp3 = ''
         for linea in contenido:
@@ -47,7 +49,9 @@ class Automata:
             validar3 = False
             validar4 = False
             validar5 = False
+            validar6 = False
             color = []
+            colocacion = []
             for caracter in linea:
                 #self.comentario(linea)
                 self.columna += 1
@@ -87,7 +91,7 @@ class Automata:
                             elif i == 'propiedades':
                                 self.estado = 18
                             elif i == 'Colocacion':
-                                self.estado = 29
+                                self.estado = 18
                 
                 if self.estado == 4:
                     if caracter.isalpha() or caracter.isnumeric():
@@ -242,6 +246,8 @@ class Automata:
                     if caracter.isalpha() or caracter.isnumeric():
                         lexema += caracter
                         opcion = 1
+                    elif caracter == ';':
+                        break
                     elif opcion == 1:
                         #print('propiedades')
                         for i in contenedor:
@@ -302,6 +308,13 @@ class Automata:
 
                         if lexema == 'propiedades':
                             self.estado = 27
+                        
+                        if lexema == 'Colocacion':
+                            self.estado = 29
+
+                        if lexema == 'this':
+                            self.estado = 18
+                            break
                 
                 #contenedor -> add por agregar :b
                 if self.estado == 19:
@@ -345,17 +358,24 @@ class Automata:
                                     lexema = ''
                                     self.estado = 18
 
-                        if lexema == 'add':
-                            validar5 = True
+                        if lexema == 'setPosicion':
+                            validar6 = True
                             lexema = ''
                             opcion = 0
                         
-                        if validar5 == True:
+                        if validar6 == True:
                             if lexema != '':
-                                self.add(tmp,self.tmp)
+                                colocacion.append(lexema)
+                                if len(colocacion) == 2:
+                                    self.setposicion(tmp,colocacion)
+                                    lexema = ''
+                                    self.estado = 18
                                 lexema = ''
-                                self.estado = 18
-                
+
+                        if lexema == 'add':
+                            self.estado = 18
+                            break
+                        
                 #boton  -> solo falta el add
                 if self.estado == 20:
                     if caracter.isalpha() or caracter.isnumeric() or caracter == " ":
@@ -408,6 +428,24 @@ class Automata:
                                 self.tmp = self.setTextoBotton(tmp,lexema)
                                 lexema = ''
                                 self.estado = 18
+
+                        if lexema == 'setPosicion':
+                            validar6 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar6 == True:
+                            if lexema != '':
+                                colocacion.append(lexema)
+                                if len(colocacion) == 2:
+                                    self.setposicion(tmp,colocacion)
+                                    lexema = ''
+                                    self.estado = 18
+                                lexema = ''
+
+                        if lexema == 'add':
+                            self.estado = 18
+                            break
                 
                 #clave -> solo falta el add
                 if self.estado == 21:
@@ -439,11 +477,29 @@ class Automata:
                             
                         if validar2 == True:
                             if lexema != '':
-                                self.setAlineacionTexto(tmp,tmp2,lexema)
+                                self.setAlineacionContraseña(tmp,tmp2,lexema)
                                 tmp2 = ''
                                 lexema = ''
                                 self.estado = 18
-                
+                        
+                        if lexema == 'setPosicion':
+                            validar6 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar6 == True:
+                            if lexema != '':
+                                colocacion.append(lexema)
+                                if len(colocacion) == 2:
+                                    self.setposicion(tmp,colocacion)
+                                    lexema = ''
+                                    self.estado = 18
+                                lexema = ''
+
+                        if lexema == 'add':
+                            self.estado = 18
+                            break
+                        
                 #texto -> solo falta el add
                 if self.estado == 22:
                     if caracter.isalpha() or caracter.isnumeric():
@@ -469,10 +525,28 @@ class Automata:
                             
                         if validar2 == True:
                             if lexema != '':
-                                self.setAlineacionContraseña(tmp,tmp2,lexema)
+                                self.setAlineacionTexto(tmp,tmp2,lexema)
                                 tmp2 = ''
                                 lexema = ''
                                 self.estado = 18
+                        
+                        if lexema == 'setPosicion':
+                            validar6 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar6 == True:
+                            if lexema != '':
+                                colocacion.append(lexema)
+                                if len(colocacion) == 2:
+                                    self.setposicion(tmp,colocacion)
+                                    lexema = ''
+                                    self.estado = 18
+                                lexema = ''
+
+                        if lexema == 'add':
+                            self.estado = 18
+                            break
                 
                 #etiqueta -> solo falta el add
                 if self.estado == 23:
@@ -526,7 +600,25 @@ class Automata:
                                     self.setColorLetra(tmp,color)
                                     lexema = ''
                                     self.estado = 18
-                
+                        
+                        if lexema == 'setPosicion':
+                            validar6 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar6 == True:
+                            if lexema != '':
+                                colocacion.append(lexema)
+                                if len(colocacion) == 2:
+                                    self.setposicion(tmp,colocacion)
+                                    lexema = ''
+                                    self.estado = 18
+                                lexema = ''
+
+                        if lexema == 'add':
+                            self.estado = 18
+                            break
+                        
                 #check -> solo falta el add
                 if self.estado == 24:
                     if caracter.isalpha() or caracter.isnumeric():
@@ -555,7 +647,25 @@ class Automata:
                                 self.tmp = self.setMarcada(tmp,tmp2,lexema)
                                 lexema = ''
                                 self.estado = 18
-                
+                        
+                        if lexema == 'setPosicion':
+                            validar6 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar6 == True:
+                            if lexema != '':
+                                colocacion.append(lexema)
+                                if len(colocacion) == 2:
+                                    self.setposicion(tmp,colocacion)
+                                    lexema = ''
+                                    self.estado = 18
+                                lexema = ''
+
+                        if lexema == 'add':
+                            self.estado = 18
+                            break
+                        
                 #radioButton -> solo falta el add 
                 if self.estado == 25:
                     if caracter.isalpha() or caracter.isnumeric():
@@ -597,6 +707,20 @@ class Automata:
                                 self.estado = 18
                                 tmp2 = ''
                                 tmp3 = ''
+
+                        if lexema == 'setPosicion':
+                            validar6 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar6 == True:
+                            if lexema != '':
+                                colocacion.append(lexema)
+                                if len(colocacion) == 2:
+                                    self.setposicion(tmp,colocacion)
+                                    lexema = ''
+                                    self.estado = 18
+                                lexema = ''
                 
                 #areaTexto -> solo falta el add
                 if self.estado == 26:
@@ -614,6 +738,24 @@ class Automata:
                                 self.tmp = self.setTextoArea(tmp,lexema)
                                 lexema = ''
                                 self.estado = 18
+                                
+                        if lexema == 'setPosicion':
+                            validar6 = True
+                            lexema = ''
+                            opcion = 0
+                        
+                        if validar6 == True:
+                            if lexema != '':
+                                colocacion.append(lexema)
+                                if len(colocacion) == 2:
+                                    self.setposicion(tmp,colocacion)
+                                    lexema = ''
+                                    self.estado = 18
+                                lexema = ''
+
+                        if lexema == 'add':
+                            self.estado = 18
+                            break
 
                 if self.estado == 27:
                     if caracter == "-":
@@ -625,26 +767,46 @@ class Automata:
                 if self.estado == 28:
                     if caracter == ">":
                         self.estado = 1
-                
+
                 if self.estado == 29:
-                    pass
+                    if caracter == "-":
+                        self.estado = 29
+                        validar += 1
+                        if validar == 2:
+                            self.estado = 30
+                
+                if self.estado == 30:
+                    if caracter == ">":
+                        continue
+                        #self.cerrarhtml()
+
+
+    def setposicion(self,id,xy):
+        self.css.write(id+"{\n")
+        self.css.write("position: absolute;\n")
+        self.css.write("left:"+xy[0]+"px; \ntop:"+ xy[1]+"px; \n")
+        self.css.write("}\n")
 
     def textoBotton(self,id,texto):
         redactar = '''<input type="submit" id="'''+id+'''" value="'''+texto+'''" style="text-align: Alineacion"/> '''
         print(redactar)
+        self.html.write(redactar+"\n")
 
     def radioButton(self,id,nombre,estado,texto):
         redactar = '''<input type="radio" id="''' + id + '''" name="''' + nombre + '''" checked="'''+estado+'''" value="email">
         <label for="''' + id + '''">''' + texto + '''</label> '''
         print(redactar)
+        self.html.write(redactar+"\n")
 
     def setMarcada(self,id, valor,texto):
         redactar  = '''<label><input type="checkbox" id="'''+id+'''" value="second_checkbox" checked="'''+valor+'''" >'''+texto+'''</label> \n'''
         print(redactar)
+        self.html.write(redactar+"\n")
 
     def setTextoArea(self,id, texto):
         redactar = ''' <TExtarea id="''' + id + '''">''' + texto + '''</TExtarea> '''
         print(redactar)
+        self.html.write(redactar+"\n")
 
     def setAncho(self,control,tamaño):
         self.css.write(control + '{\n')
@@ -669,19 +831,19 @@ class Automata:
     def setTexto(self,control,texto):
         redactar = '''<label id="''' + control + '''">''' + texto + '''</label>'''
         print(redactar)
+        self.html.write(redactar+"\n")
 
     def setTextoBotton(self,id,texto):
         redactar = '''<input type="button" id="'''+id+'''" value="'''+texto+'''">'''
         print(redactar)
+        self.html.write(redactar+"\n")
 
     def setColorLetra(self,control,color):
         self.css.write(control + '{\n')
         self.css.write('color: rgb(' )
-        
         for i in color:
             self.css.write(i + ',')
         self.css.write(');\n')
-        
         self.css.write('}\n')
 
     def add(self, div, contenido):
@@ -712,7 +874,7 @@ class Automata:
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultado</title>
-    <link rel="stylesheet" type="estilo.css" href="URL">
+    <link rel="stylesheet" href="/estilo.css">
 </head>
 <body>
 ''')
@@ -720,7 +882,20 @@ class Automata:
     def setAlineacionContraseña(self,control, texto, alineacion):
         redactar = '''<input type = "password" id="''' + control + '''"  value="''' + texto +'''" style="text-align: '''+ alineacion +'''" />'''
         print(redactar)
+        self.html.write(redactar+"\n")
 
     def setAlineacionTexto(self,id,texto,alineacion):
         redactar = '''<input type = "text" id="''' + id + '''"  value="''' + texto +'''" style="text-align: '''+ alineacion +'''" />'''
         print(redactar)
+        self.html.write(redactar+"\n")
+
+    def cerrarhtml(self):
+        self.html.write(
+'''
+</body>
+</html>
+''')
+        self.html.close()
+
+#a = Automata()
+#a.analizador()
